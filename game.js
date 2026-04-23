@@ -36,6 +36,8 @@ class Gameboard {
 
 
     // need to validate cordinates to make sure they dont go off board / aren't already occupied
+    // getCordSet is coupled with validation logic, seperate out the functions
+    // validation also needs to check if spot is already occupied
     getCordSet(shipLength, intialCord, direction) {
         if (intialCord[0] > 9 || intialCord[1] > 9) {throw new Error("Cordinate outside board range")};
         let set = [];
