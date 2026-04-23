@@ -27,7 +27,8 @@ class Gameboard {
 
     placeShip(ship, cord, direction) {
         let cordinates = this.getCordSet(ship.length, cord)
-        if (cordinates.length === 0) {return}; // no valid cordinates, early exit
+        if (!this.validateCord(cordinates)) {return}
+
         cordinates.forEach((pair) => {
             this.board[pair[0]][pair[1]].ship = ship;
         });
@@ -73,7 +74,7 @@ class Gameboard {
 let game = new Gameboard();
 let ship1 = new Ship(5)
 game.placeShip(ship1, [8, 5], "vertical")
-game.placeShip(ship1, [8, 3], "vertical")
-console.log(game.validateCord([[2, 4], [4, 3], [2, 5]]));
+game.placeShip(ship1, [8, 0], "vertical")
+console.log(game.board);
 
 export {Gameboard};
