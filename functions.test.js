@@ -12,11 +12,11 @@ test('board has 10 columns', () => {
     })).toBe(true);
 });
 
-test('Each cell is an object that contains isHit key', () => {
+test('Each cell is an object that contains isHit key and ship key', () => {
     let game = new Gameboard();
     expect(game.board.every((row) => {
         return row.every((cell) => {
-            return cell.hasOwnProperty("isHit");
+            return cell.hasOwnProperty("isHit") && cell.hasOwnProperty("ship");
         })
     })).toBe(true);
 })
