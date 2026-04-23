@@ -15,3 +15,12 @@ class Ship {
         return result;
     }
 }
+
+class Gameboard {
+    constructor() {
+        this.board = Array.from({length:10}, () => Array(10).fill({isHit: false}));
+    }
+};
+
+let gameBoard = new Gameboard();
+console.log(gameBoard.board);
