@@ -20,13 +20,13 @@ class Gameboard {
     constructor() {
         this.board = Array.from({length: 10}, () => {
             return Array.from({length: 10}, () => {
-                return {isHit: false};
+                return {isHit: false, ship: null};
             })
         });
     }
 
     placeShip(ship, cord, direction) {
-        let cordinates = this.validateCord(this.getCordSet(ship.length, cord, direction));
+        let cordinates = this.getCordSet(ship.length, cord)
         if (cordinates.length === 0) {return}; // no valid cordinates, early exit
         cordinates.forEach((pair) => {
             this.board[pair[0]][pair[1]].ship = ship;
@@ -60,15 +60,13 @@ class Gameboard {
     // checks that cords are in board range
     // makes sure each cell isnt occupied 
     validateCord(cordSet) {
-        let intialLength = cordSet.length;
-        let filtered = cordSet.filter(([x, y]) => {
-            return x <= 9 && y <= 9;
-        });
-        filtered = filtered.filter(([x, y]) => {
+        let checked = cordSet.every(([x, y]) => {
             let cell = this.board[x][y];
-            return !Object.hasOwn(cell, "ship");
-        })
-        return filtered.length === intialLength ? filtered : [];
+            let cellCheck = !cell.ship
+            let rangeCheck = x <= 9 && x >= 0 && y <= 9 && y >= 0;
+            return cellCheck && rangeCheck;
+        });
+        return checked;
     }
 };
 
@@ -76,6 +74,6 @@ let game = new Gameboard();
 let ship1 = new Ship(5)
 game.placeShip(ship1, [8, 5], "vertical")
 game.placeShip(ship1, [8, 3], "vertical")
-console.log(game.board);
+console.log(game.validateCord([[2, 4], [4, 3], [2, 5]]));
 
 export {Gameboard};
