@@ -18,13 +18,23 @@ class Ship {
 
 class Gameboard {
     constructor() {
-        this.board = Array.from({length:10}, () => Array(10).fill({isHit: false}));
+        this.board = Array.from({length: 10}, () => {
+            return Array.from({length: 10}, () => {
+                return {isHit: false};
+            })
+        });
     }
 
     placeShip(ship, cord, direction) {
-
+        let cordinates = this.getCordSet(ship.length, cord, direction);
+        console.log(cordinates);
+        cordinates.forEach((pair) => {
+            this.board[pair[0]][pair[1]].ship = ship;
+        });
     };
 
+
+    // need to validate cordinates to make sure they dont go off board
     getCordSet(shipLength, intialCord, direction) {
         let set = [];
         let offset;
@@ -48,7 +58,8 @@ class Gameboard {
 };
 
 let game = new Gameboard();
-
-console.log(game.getCordSet(4, [3, 4], "vertical"));
+let ship1 = new Ship(4)
+game.placeShip(ship1, [4, 4], "vertical")
+console.log(game.board);
 
 export {Gameboard};
