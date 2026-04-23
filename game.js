@@ -27,6 +27,7 @@ class Gameboard {
 
     placeShip(ship, cord, direction) {
         let cordinates = this.getCordSet(ship.length, cord, direction);
+        if (!cordinates) {throw new Error("invalid ship placement")};
         console.log(cordinates);
         cordinates.forEach((pair) => {
             this.board[pair[0]][pair[1]].ship = ship;
@@ -34,8 +35,9 @@ class Gameboard {
     };
 
 
-    // need to validate cordinates to make sure they dont go off board
+    // need to validate cordinates to make sure they dont go off board / aren't already occupied
     getCordSet(shipLength, intialCord, direction) {
+        if (intialCord[0] > 9 || intialCord[1] > 9) {throw new Error("Cordinate outside board range")};
         let set = [];
         let offset;
         let startCord = [...intialCord];
@@ -49,17 +51,19 @@ class Gameboard {
         for (let i = 0; i < shipLength; i++) {
             set.push(startCord);
             startCord = startCord.map((num, index) => {
-                return num + offset[index];
+                let cord = num + offset[index];
+                if (cord > 9) {throw new Error("Cordinate outside board range")}
+                return cord;
             })
         };
 
-        return set;
+        return set.length === shipLength ? set : null;
     }
 };
 
 let game = new Gameboard();
-let ship1 = new Ship(4)
-game.placeShip(ship1, [4, 4], "vertical")
+let ship1 = new Ship(5)
+game.placeShip(ship1, [8, 5], "vertical")
 console.log(game.board);
 
 export {Gameboard};
