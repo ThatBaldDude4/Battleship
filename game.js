@@ -86,6 +86,12 @@ class Gameboard {
     }
 };
 
+class Player {
+    constructor() {
+        this.gameboard = new Gameboard();
+    };
+}
+
 let game = new Gameboard();
 let ship1 = new Ship(5)
 game.placeShip(ship1, [8, 5], "vertical")
