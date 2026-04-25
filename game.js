@@ -23,6 +23,7 @@ class Gameboard {
                 return {isHit: false, ship: null};
             })
         });
+        this.ships = [new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
     }
 
     placeShip(ship, cord, direction) {
@@ -72,6 +73,7 @@ class Gameboard {
             cell.isHit = true;
             if (cell.ship) {
                 cell.ship.hit();
+                cell.ship.isSunk();
             }
         }
     }
