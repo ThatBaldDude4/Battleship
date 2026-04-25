@@ -34,10 +34,6 @@ class Gameboard {
         });
     };
 
-
-    // need to validate cordinates to make sure they dont go off board / aren't already occupied
-    // getCordSet is coupled with validation logic, seperate out the functions
-    // validation also needs to check if spot is already occupied
     getCordSet(shipLength, intialCord, direction = "vertical") {
         let set = [];
         let offset;
@@ -68,6 +64,16 @@ class Gameboard {
             return cellCheck && rangeCheck;
         });
         return checked;
+    }
+
+    receiveAttack(cord) {
+        let cell = this.board[cord[0]][cord[1]];
+        if (!cell.isHit) {
+            cell.isHit = true;
+            if (cell.ship) {
+                cell.ship.hit();
+            }
+        }
     }
 };
 
