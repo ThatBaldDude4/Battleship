@@ -26,7 +26,7 @@ class Gameboard {
         this.ships = [new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
     }
 
-    placeShip(ship, cord, direction) {
+    placeShip(ship, cord, direction = "horizontal") {
         let cordinates = this.getCordSet(ship.length, cord)
         if (!this.validateCord(cordinates)) {return}
 
