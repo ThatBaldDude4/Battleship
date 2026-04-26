@@ -94,11 +94,3 @@ class Player {
 };
 
 export {Player, Gameboard, Ship}
-
-let game = new Gameboard();
-let ship1 = new Ship(5)
-game.placeShip(ship1, [8, 5], "vertical")
-game.placeShip(ship1, [8, 0], "vertical")
-console.log(game.allSunk());
-
-export {Gameboard};
