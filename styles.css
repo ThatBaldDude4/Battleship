@@ -5,6 +5,11 @@
     padding: 0;
 }
 
+#game-container {
+    gap: 100px;
+    display: flex;
+}
+
 .grid-cell {
     border: 2px solid orange;
     min-width: 20px;
@@ -18,4 +23,8 @@
     grid-template-rows: repeat(10, 1fr); 
     border: 2px solid white;
     max-width: 400px;
-} 
+}
+
+.occupied {
+    background-color: white;
+}
