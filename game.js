@@ -91,7 +91,9 @@ class Player {
         this.gameboard = new Gameboard();
         this.playerType = playerType;
     };
-}
+};
+
+export {Player, Gameboard, Ship}
 
 let game = new Gameboard();
 let ship1 = new Ship(5)
