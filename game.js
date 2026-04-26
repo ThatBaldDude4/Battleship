@@ -87,8 +87,9 @@ class Gameboard {
 };
 
 class Player {
-    constructor() {
+    constructor(playerType = "computer") {
         this.gameboard = new Gameboard();
+        this.playerType = playerType;
     };
 }
 
