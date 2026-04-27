@@ -35,16 +35,14 @@ function createBoard(board) {
     return html;
 };
 
-player1Board.addEventListener("click", (e) => {
-    const cords = e.target.dataset.cord; //e.currentTarget for parent container
-    const player = e.currentTarget.dataset.player;
-    console.log({cord: cords, play: player})
-})
+document.addEventListener("click", (e) => {
+    console.log("test")
+    const cords = e.target.closest(".grid-cell")?.dataset.cord
+    const board = e.target.closest(".board")?.dataset.player;
 
-player2Board.addEventListener("click", (e) => {
-    const cords = e.target.dataset.cord; //e.currentTarget for parent container
-    const board = e.currentTarget.dataset.player;
-    console.log({cord: cords, board: board})
+    if (cords && board) {
+        console.log(cords, board);
+    }
 })
 
 const player1 = new Player("person");
