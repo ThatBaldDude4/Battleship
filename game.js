@@ -60,7 +60,7 @@ class Gameboard {
     validateCord(cordSet) {
         let checked = cordSet.every(([x, y]) => {
             let cell = this.board[x][y];
-            let cellCheck = !cell.ship
+            let cellCheck = !cell?.ship
             let rangeCheck = x <= 9 && x >= 0 && y <= 9 && y >= 0;
             return cellCheck && rangeCheck;
         });
