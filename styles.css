@@ -28,3 +28,11 @@
 .occupied {
     background-color: white;
 }
+
+.hit {
+    background-color: blue;
+}
+
+.occupied.hit {
+    background-color: red;
+}
