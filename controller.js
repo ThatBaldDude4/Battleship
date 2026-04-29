@@ -33,13 +33,14 @@ function actions(payload) {
         //if payload has coordiantes and the defender is the same as the board that got clicked:
         defender.gameboard.receiveAttack(payload.cords);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
-
-        if (defender.playerType === "computer") {
-            let attackCord = defender.computerMove();
-            attacker.gameboard.receiveAttack(attackCord);
-            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
-        }
+        
     };
+
+    if (defender.playerType === "computer") {
+        let attackCord = defender.computerMove();
+        attacker.gameboard.receiveAttack(attackCord);
+        controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
+    }
 
     if (attacker.playerType === "computer") {
 
