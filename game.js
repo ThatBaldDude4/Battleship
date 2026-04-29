@@ -35,7 +35,7 @@ class Gameboard {
         });
     };
 
-    getCordSet(shipLength, intialCord, direction = "vertical") {
+    getCordSet(shipLength, intialCord, direction = "horizontal") {
         let set = [];
         let offset;
         let startCord = [...intialCord];
