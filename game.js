@@ -89,8 +89,26 @@ class Gameboard {
 class Player {
     constructor(playerType = "computer") {
         this.gameboard = new Gameboard();
-        this.playerType = playerType;
+        this.playerType = playerType.toLowerCase();
+        this.possibleMoves = this.getAllMoves();
     };
+
+    getAllMoves() {
+        let possibleMoves = [];
+        this.gameboard.board.forEach((array, y) => {
+            array.forEach((cell, x) => {
+                possibleMoves.push([x, y]);
+            })
+        })
+        return possibleMoves;
+    };
+
+    computerMove() {
+        let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
+        let randomMove = this.possibleMoves[randomIndex];
+        this.possibleMoves.splice(randomIndex, 1);
+        return randomMove;
+    }
 };
 
 export {Player, Gameboard, Ship}
