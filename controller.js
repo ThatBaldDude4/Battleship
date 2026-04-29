@@ -18,12 +18,14 @@ const controller = {
 };
 
 function actions(payload) {
-    const defender = controller.currentPlayer === controller.players.player1 ?
-        controller.players.player2 :
-        controller.players.player1;
-    console.log(payload)
-    // need to make sure correct board receives attack;
-    if (payload.cords) {
+    if (!payload || !payload.player || !payload.cords){return};
+    
+    const defender = controller.players[payload.player];
+    let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
+
+    // currentPlayer is defending and the clicked cell hasn't been clicked before
+    if (defender !== controller.currentPlayer && !cell.isHit) {
+        //if payload has coordiantes and the defender is the same as the board that got clicked:
         defender.gameboard.receiveAttack(payload.cords);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
         renderPlayersBoards(controller.players);
@@ -59,27 +61,24 @@ document.addEventListener("click", (e) => {
         cords.splice(1, 1)
         finalCords = cords.map((str) => {return Number(str)})
     }
-     // convert cords string to numbers
-    const board = e.target.closest(".board")?.dataset.player;
+    // convert cords string to numbers
 
-    if (cords && board) {
-        actions({cords: finalCords, board})
+    const player = e.target.closest(".board")?.dataset.player;
+
+    if (cords && player) {
+        actions({cords: finalCords, player})
     }
 })
 
-const player1 = new Player("person");
-const player2 = new Player();
+const player1 = controller.players.player1;
+const player2 = controller.players.player2
 
 player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
 player1.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-player1.gameboard.placeShip(player1.gameboard.ships[2], [2,3]);
-player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5])
-player1.gameboard.placeShip(player1.gameboard.ships[4], [5,5])
+player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
+player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
+player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
 
-player1.gameboard.receiveAttack([2, 4])
-player1.gameboard.receiveAttack([2, 0])
-player1.gameboard.receiveAttack([2, 3])
-player1.gameboard.receiveAttack([2, 1])
 console.log(player1.gameboard.board[2][5])
 let string1 = createBoard(player1.gameboard.board);
 let string2 = createBoard(player2.gameboard.board);
