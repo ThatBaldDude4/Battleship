@@ -22,6 +22,7 @@ function actions(payload) {
         controller.players.player2 :
         controller.players.player1;
     console.log(payload)
+    // need to make sure correct board receives attack;
     if (payload.cords) {
         defender.gameboard.receiveAttack(payload.cords);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
@@ -29,6 +30,7 @@ function actions(payload) {
     }
 }
 
+// may want to make modular
 function renderPlayersBoards(players) {
     let string1 = createBoard(players.player1.gameboard.board);
     let string2 = createBoard(players.player2.gameboard.board);
@@ -49,10 +51,15 @@ function createBoard(board) {
     return html;
 };
 
+// may want to refactor extra vars
 document.addEventListener("click", (e) => {
     const cords = e.target.closest(".grid-cell")?.dataset.cord.split("");
-    cords.splice(1, 1);
-    let finalCords = cords.map((str) => {return Number(str)}) // convert cords string to numbers
+    let finalCords;
+    if (cords) {
+        cords.splice(1, 1)
+        finalCords = cords.map((str) => {return Number(str)})
+    }
+     // convert cords string to numbers
     const board = e.target.closest(".board")?.dataset.player;
 
     if (cords && board) {
