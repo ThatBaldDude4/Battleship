@@ -10,7 +10,7 @@ const player2Ships = document.getElementById("player2-ships");
 
 const controller = {
     currentPlayer: null,
-    winner: "null",
+    winner: null,
     players: {
         player1: new Player("Human"),
         player2: new Player("Computer"),
@@ -19,8 +19,13 @@ const controller = {
 
 function actions(payload) {
     if (!payload || !payload.player || !payload.cords){return};
-    
+    if (controller.winner) {
+        console.log("game already won"); 
+        return
+    };
+
     const defender = controller.players[payload.player];
+    const attacker = controller.currentPlayer;
     let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
     // currentPlayer is defending and the clicked cell hasn't been clicked before
@@ -28,8 +33,23 @@ function actions(payload) {
         //if payload has coordiantes and the defender is the same as the board that got clicked:
         defender.gameboard.receiveAttack(payload.cords);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
-        renderPlayersBoards(controller.players);
+
+        if (defender.playerType === "computer") {
+            let attackCord = defender.computerMove();
+            attacker.gameboard.receiveAttack(attackCord);
+            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
+        }
+    };
+
+    if (attacker.playerType === "computer") {
+
     }
+
+    if (defender.gameboard.allSunk()) {
+        console.log("game over");
+    }
+
+    renderPlayersBoards(controller.players);
 }
 
 // may want to make modular
@@ -52,7 +72,7 @@ function createBoard(board) {
     })
     return html;
 };
-
+ 
 // may want to refactor extra vars
 document.addEventListener("click", (e) => {
     const cords = e.target.closest(".grid-cell")?.dataset.cord.split("");
@@ -79,7 +99,12 @@ player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
 player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
 player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
 
-console.log(player1.gameboard.board[2][5])
+player2.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
+player2.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
+player2.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
+player2.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
+player2.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
+
 let string1 = createBoard(player1.gameboard.board);
 let string2 = createBoard(player2.gameboard.board);
 
