@@ -42,10 +42,6 @@ function actions(payload) {
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
     }
 
-    if (attacker.playerType === "computer") {
-
-    }
-
     if (defender.gameboard.allSunk()) {
         console.log("game over");
     }
@@ -114,4 +110,4 @@ player2Board.innerHTML = string2;
 
 (() => {
     controller.currentPlayer = controller.players.player1
-})()
+})();
