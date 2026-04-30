@@ -1,4 +1,5 @@
 import {Player, Gameboard, Ship} from "./game.js";
+import { createBoard, renderPlayersBoards } from "./ui.js";
 
 const gameContainer = document.getElementById("game-container");
 const player1Container = document.getElementById("player1-container");
@@ -23,7 +24,7 @@ function actions(payload) {
         console.log("game already won"); 
         return
     };
-
+    console.log(payload);
     const defender = controller.players[payload.player];
     const attacker = controller.currentPlayer;
     let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
@@ -36,7 +37,8 @@ function actions(payload) {
         
     };
 
-    if (defender.playerType === "computer") {
+    if (defender.playerType === "computer" && defender === controller.currentPlayer) {
+        console.log("computer fired")
         let attackCord = defender.computerMove();
         attacker.gameboard.receiveAttack(attackCord);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
@@ -46,28 +48,7 @@ function actions(payload) {
         console.log("game over");
     }
 
-    renderPlayersBoards(controller.players);
-}
-
-// may want to make modular
-function renderPlayersBoards(players) {
-    let string1 = createBoard(players.player1.gameboard.board);
-    let string2 = createBoard(players.player2.gameboard.board);
-    player1Board.innerHTML = string1;
-    player2Board.innerHTML = string2;
-}
-
-function createBoard(board) {
-    let html = "";
-    let container = [];
-    board.forEach((column, x) => {
-        column.forEach((cell, y) => {
-            let ship = cell.ship ? "occupied" : "";
-            let hit = cell.isHit ? "hit" : "";
-            html += `<div class="grid-cell ${ship} ${hit}" data-cord="${[x, y]}"></div>`;
-        })
-    })
-    return html;
+    renderPlayersBoards(controller.players, player1Board, player2Board);
 };
  
 // may want to refactor extra vars
@@ -85,29 +66,25 @@ document.addEventListener("click", (e) => {
     if (cords && player) {
         actions({cords: finalCords, player})
     }
-})
+});
 
-const player1 = controller.players.player1;
-const player2 = controller.players.player2
-
-player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
-player1.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
-player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
-player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
-
-player2.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
-player2.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-player2.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
-player2.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
-player2.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
-
-let string1 = createBoard(player1.gameboard.board);
-let string2 = createBoard(player2.gameboard.board);
-
-player1Board.innerHTML = string1;
-player2Board.innerHTML = string2;
-
+//intialize IIFE
 (() => {
+    const player1 = controller.players.player1;
+    const player2 = controller.players.player2
+
+    player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
+    player1.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
+    player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
+    player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
+    player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
+
+    player2.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
+    player2.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
+    player2.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
+    player2.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
+    player2.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
+
     controller.currentPlayer = controller.players.player1
-})();
+    renderPlayersBoards(controller.players, player1Board, player2Board);
+})();  
