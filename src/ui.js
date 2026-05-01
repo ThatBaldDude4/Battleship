@@ -36,4 +36,4 @@ function renderPlayersBoards(players, container1, container2) {
     container2.innerHTML = boardStr2;
 }
 
-export {createBoard, renderPlayersBoards};
+export {createBoard, renderPlayersBoards, render};
