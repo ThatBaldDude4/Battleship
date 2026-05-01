@@ -1,5 +1,5 @@
 import {Player, Gameboard, Ship} from "./game.js";
-import { createBoard, renderPlayersBoards } from "./ui.js";
+import { createBoard, renderPlayersBoards, render } from "./ui.js";
 
 const gameContainer = document.getElementById("game-container");
 const player1Container = document.getElementById("player1-container");
@@ -79,11 +79,11 @@ document.addEventListener("click", (e) => {
     player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
     player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
 
-    player2.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
-    player2.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-    player2.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
-    player2.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
-    player2.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
+    player2.gameboard.placeShip(player2.gameboard.ships[0], [0,5])
+    player2.gameboard.placeShip(player2.gameboard.ships[1], [2,3])
+    player2.gameboard.placeShip(player2.gameboard.ships[2], [2,1]);
+    player2.gameboard.placeShip(player2.gameboard.ships[3], [6,5], "vertical")
+    player2.gameboard.placeShip(player2.gameboard.ships[4], [5,9]);
 
     controller.currentPlayer = controller.players.player1
     renderPlayersBoards(controller.players, player1Board, player2Board);
