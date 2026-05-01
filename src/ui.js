@@ -1,3 +1,20 @@
+function render(payload) {
+    if (payload.view = "in-progress") {
+        payload.root.innerHTML = `
+        <div id="player1-container">
+            <h2>Player 1</h2>
+            <div id="player1-board" class="board" data-player="player1"></div>
+            <div id="player1-ships"></div>
+        </div>
+        <div id="player2-container">
+            <h2>Player 2</h2>
+            <div id="player2-board" class="board" data-player="player2"></div>
+            <div id="player2-ships"></div>
+        </div>
+        `
+    };
+}
+
 function createBoard(board) {
     let html = "";
     let container = [];
