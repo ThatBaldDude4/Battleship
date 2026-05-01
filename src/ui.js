@@ -19,4 +19,8 @@ function renderPlayersBoards(players, container1, container2) {
     container2.innerHTML = boardStr2;
 }
 
+function createWinScreen(winner) {
+    
+}
+
 export {createBoard, renderPlayersBoards};

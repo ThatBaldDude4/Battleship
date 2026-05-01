@@ -24,7 +24,7 @@ function actions(payload) {
         console.log("game already won"); 
         return
     };
-    console.log(payload);
+
     const defender = controller.players[payload.player];
     const attacker = controller.currentPlayer;
     let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
@@ -38,7 +38,6 @@ function actions(payload) {
     };
 
     if (defender.playerType === "computer" && defender === controller.currentPlayer) {
-        console.log("computer fired")
         let attackCord = defender.computerMove();
         attacker.gameboard.receiveAttack(attackCord);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
@@ -49,7 +48,7 @@ function actions(payload) {
     }
 
     renderPlayersBoards(controller.players, player1Board, player2Board);
-};
+}; 
  
 // may want to refactor extra vars
 document.addEventListener("click", (e) => {
@@ -73,18 +72,18 @@ document.addEventListener("click", (e) => {
     const player1 = controller.players.player1;
     const player2 = controller.players.player2
 
-    player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
+    player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5], "vertical")
     player1.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
     player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
     player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
     player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
 
-    player2.gameboard.placeShip(player1.gameboard.ships[0], [0,5])
-    player2.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-    player2.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
-    player2.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
-    player2.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
+    player2.gameboard.placeShip(player2.gameboard.ships[0], [0,5])
+    player2.gameboard.placeShip(player2.gameboard.ships[1], [2,3])
+    player2.gameboard.placeShip(player2.gameboard.ships[2], [2,1]);
+    player2.gameboard.placeShip(player2.gameboard.ships[3], [6,5], "vertical")
+    player2.gameboard.placeShip(player2.gameboard.ships[4], [5,9]);
 
     controller.currentPlayer = controller.players.player1
     renderPlayersBoards(controller.players, player1Board, player2Board);
-})();  
+})();
