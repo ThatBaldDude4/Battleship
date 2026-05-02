@@ -1,5 +1,5 @@
 import {Player, Gameboard, Ship} from "./game.js";
-import { createBoard, renderPlayersBoards } from "./ui.js";
+import { createBoard, renderPlayersBoards, render } from "./ui.js";
 
 const gameContainer = document.getElementById("game-container");
 const player1Container = document.getElementById("player1-container");
@@ -12,6 +12,7 @@ const player2Ships = document.getElementById("player2-ships");
 const controller = {
     currentPlayer: null,
     winner: null,
+    view: "playing",
     players: {
         player1: new Player("Human"),
         player2: new Player("Computer"),
@@ -46,9 +47,8 @@ function actions(payload) {
     if (defender.gameboard.allSunk()) {
         console.log("game over");
     }
-
-    renderPlayersBoards(controller.players, player1Board, player2Board);
-}; 
+    render({players: controller.players, view: controller.view, root: gameContainer})
+};
  
 // may want to refactor extra vars
 document.addEventListener("click", (e) => {
@@ -85,5 +85,6 @@ document.addEventListener("click", (e) => {
     player2.gameboard.placeShip(player2.gameboard.ships[4], [5,9]);
 
     controller.currentPlayer = controller.players.player1
-    renderPlayersBoards(controller.players, player1Board, player2Board);
-})();
+
+    render({players: controller.players, view: controller.view, root: gameContainer})
+})();  
