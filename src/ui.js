@@ -1,6 +1,16 @@
+// payload = {players, root, view}
 function render(payload) {
-    if (payload.view = "in-progress") {
-        payload.root.innerHTML = `
+    if (payload.view === "start-game") {
+        payload.root.innerHTML = createPlayerContainers();
+        renderPlayersBoards(payload.players, payload.root);
+    };
+    if (payload.view === "playing") {
+        renderPlayersBoards(payload.players, payload.root);
+    }
+};
+
+function createPlayerContainers() {
+    return `
         <div id="player1-container">
             <h2>Player 1</h2>
             <div id="player1-board" class="board" data-player="player1"></div>
@@ -11,9 +21,8 @@ function render(payload) {
             <div id="player2-board" class="board" data-player="player2"></div>
             <div id="player2-ships"></div>
         </div>
-        `
-    };
-}
+    `;
+};
 
 function createBoard(board) {
     let html = "";
@@ -29,11 +38,11 @@ function createBoard(board) {
 };
 
 //may refactor so 2 container limit is removed
-function renderPlayersBoards(players, container1, container2) {
+function renderPlayersBoards(players, root) {
     let boardStr1 = createBoard(players.player1.gameboard.board);
     let boardStr2 = createBoard(players.player2.gameboard.board);
-    container1.innerHTML = boardStr1;
-    container2.innerHTML = boardStr2;
-}
+    root.querySelector("#player1-board").innerHTML = boardStr1;
+    root.querySelector("#player2-board").innerHTML = boardStr2;
+} 
 
 export {createBoard, renderPlayersBoards, render};
