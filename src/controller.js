@@ -12,7 +12,7 @@ const player2Ships = document.getElementById("player2-ships");
 const controller = {
     currentPlayer: null,
     winner: null,
-    view: "playing",
+    view: "home",
     players: {
         player1: new Player("Human"),
         player2: new Player("Computer"),
@@ -35,13 +35,22 @@ function actions(payload) {
         //if payload has coordiantes and the defender is the same as the board that got clicked:
         defender.gameboard.receiveAttack(payload.cords);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
-        
+        if (defender.gameboard.allSunk()) {
+            controller.view = "won";
+            render({view: controller.view, root: gameContainer, players: controller.players});
+            return
+        }
     };
 
     if (defender.playerType === "computer" && defender === controller.currentPlayer) {
         let attackCord = defender.computerMove();
         attacker.gameboard.receiveAttack(attackCord);
         controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
+        if (attacker.gameboard.allSunk()) {
+            controller.view = "won";
+            render({view: controller.view, root: gameContainer, players: controller.players});
+            return;
+        }
     }
 
     if (defender.gameboard.allSunk()) {
