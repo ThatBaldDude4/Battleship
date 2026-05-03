@@ -6,6 +6,13 @@ function render(payload) {
     };
     if (payload.view === "playing") {
         renderPlayersBoards(payload.players, payload.root);
+    };
+    if (payload.view === "won") {
+        renderPlayersBoards(payload.players, payload.root);
+        renderWinner(payload.root)
+    };
+    if (payload.view === "home") {
+        renderHome(payload.root);
     }
 };
 
@@ -37,13 +44,38 @@ function createBoard(board) {
     return html;
 };
 
+function renderWinner(root) {
+    root.innerHTML += `<h1>THERE HAS BEEN A WINNER`;
+}
+
 //may refactor so 2 container limit is removed
 function renderPlayersBoards(players, root) {
     let boardStr1 = createBoard(players.player1.gameboard.board);
     let boardStr2 = createBoard(players.player2.gameboard.board);
     root.querySelector("#player1-board").innerHTML = boardStr1;
     root.querySelector("#player2-board").innerHTML = boardStr2;
-} 
+}
+
+function renderHome(root) {
+    root.innerHTML = `
+    <form id="home-form">
+        <label id="player1-selection-label">
+            Player One Type:
+            <select id="player1-selection">
+                <option value="human">Human</option>
+                <option value="computer">Computer</option>
+            </select>
+        </label>
+        <label id="player2-selection-label">
+            Player Two Type:
+            <select id="player2-selection">
+                <option value="human">Human</option>
+                <option value="computer">Computer</option>
+            </select>
+        </label>
+    </form>
+    `
+}
 
 export {createBoard, renderPlayersBoards, render};
 
