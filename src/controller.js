@@ -26,42 +26,46 @@ function actions(payload) {
         return
     };
 
-    const defender = controller?.players[payload.player];
-    const attacker = controller?.currentPlayer;
-    let cell = defender?.gameboard.board[payload.cords[0]][payload.cords[1]];
-
-    // currentPlayer is defending and the clicked cell hasn't been clicked before
-    if (defender !== controller.currentPlayer && !cell?.isHit && defender) {
-        controller.view = "playing";
-        defender.gameboard.receiveAttack(payload.cords);
-        controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
-        if (defender.gameboard.allSunk()) {
-            controller.view = "won";
-            render({view: controller.view, root: gameContainer, players: controller.players});
-            return
-        }
+    if (payload.type === "start-game") {
+        if (payload.playersValues) {
+            controller.players.player1 = new Player(payload.playersValues.player1Value);
+            controller.players.player2 = new Player(payload.playersValues.player2Value);
+            controller.view = "start-game";
+        };
     };
 
-    if (defender?.playerType === "computer" && defender === controller.currentPlayer && defender) {
-        controller.view = "playing";
-        let attackCord = defender.computerMove();
-        attacker.gameboard.receiveAttack(attackCord);
-        controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
-        if (attacker.gameboard.allSunk()) {
-            controller.view = "won";
-            render({view: controller.view, root: gameContainer, players: controller.players});
-            return;
+    if (payload.type === "attack") {
+        const defender = controller.players[payload.player];
+        const attacker = controller.currentPlayer;
+        let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
+
+        // currentPlayer is defending and the clicked cell hasn't been clicked before
+        if (defender !== controller.currentPlayer && !cell?.isHit && defender) {
+            controller.view = "playing";
+            defender.gameboard.receiveAttack(payload.cords);
+            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
+            if (defender.gameboard.allSunk()) {
+                controller.view = "won";
+                render({view: controller.view, root: gameContainer, players: controller.players});
+                return
+            }
+        };
+
+        if (defender?.playerType === "computer" && defender === controller.currentPlayer && defender) {
+            controller.view = "playing";
+            let attackCord = defender.computerMove();
+            attacker.gameboard.receiveAttack(attackCord);
+            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
+            if (attacker.gameboard.allSunk()) {
+                controller.view = "won";
+                render({view: controller.view, root: gameContainer, players: controller.players});
+                return;
+            }
         }
-    }
 
-    if (defender?.gameboard.allSunk()) {
-        console.log("game over");
-    }
-
-    if (payload.playersValues) {
-        controller.players.player1 = new Player(payload.playersValues.player1Value);
-        controller.players.player2 = new Player(payload.playersValues.player2Value);
-        controller.view = "start-game";
+        if (defender.gameboard.allSunk()) {
+            console.log("game over");
+        }
     };
 
     console.log(controller.players)
@@ -81,7 +85,7 @@ document.addEventListener("click", (e) => {
     const player = e.target.closest(".board")?.dataset.player;
 
     if (cords && player) {
-        actions({cords: finalCords, player})
+        actions({cords: finalCords, player, type: "attack"})
     }
 });
 
@@ -93,7 +97,8 @@ document.addEventListener("submit", (e) => {
         playersValues: {
             player1Value: player1Value,
             player2Value: player2Value,
-        }
+        },
+        type: "start-game",
     });
 });
 
@@ -129,3 +134,4 @@ startGame();
 //Need to fix bug - 1 turn delay for computer to start working
 //Form not proplery setting player type
 //Need to decide how im going to display ships
+//Add a type checkout in actions to detrimine start-game vs in game rendering (avoids the ?. checks)
