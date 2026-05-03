@@ -73,6 +73,7 @@ function renderHome(root) {
                 <option value="computer">Computer</option>
             </select>
         </label>
+        <button>Submit</button>
     </form>
     `
 }
