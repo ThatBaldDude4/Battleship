@@ -31,6 +31,7 @@ function actions(payload) {
             controller.players.player1 = new Player(payload.playersValues.player1Value);
             controller.players.player2 = new Player(payload.playersValues.player2Value);
             controller.view = "start-game";
+            controller.currentPlayer = controller.players.player1;
         };
     };
 
@@ -40,7 +41,7 @@ function actions(payload) {
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
         // currentPlayer is defending and the clicked cell hasn't been clicked before
-        if (defender !== controller.currentPlayer && !cell?.isHit && defender) {
+        if (defender !== controller.currentPlayer && !cell?.isHit) {
             controller.view = "playing";
             defender.gameboard.receiveAttack(payload.cords);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
@@ -51,7 +52,8 @@ function actions(payload) {
             }
         };
 
-        if (defender?.playerType === "computer" && defender === controller.currentPlayer && defender) {
+        if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
+            console.log(defender.playerType)
             controller.view = "playing";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
@@ -68,7 +70,6 @@ function actions(payload) {
         }
     };
 
-    console.log(controller.players)
     render({players: controller.players, view: controller.view, root: gameContainer})
 };
  
@@ -85,6 +86,7 @@ document.addEventListener("click", (e) => {
     const player = e.target.closest(".board")?.dataset.player;
 
     if (cords && player) {
+        console.log("attack sent")
         actions({cords: finalCords, player, type: "attack"})
     }
 });
@@ -105,33 +107,9 @@ document.addEventListener("submit", (e) => {
 function startGame() {
     render({root: gameContainer, view: controller.view})
 }
-
-//intialize IIFE
-// (() => {
-//     const player1 = controller.players.player1;
-//     const player2 = controller.players.player2
-
-//     player1.gameboard.placeShip(player1.gameboard.ships[0], [0,5], "vertical")
-//     player1.gameboard.placeShip(player1.gameboard.ships[1], [2,3])
-//     player1.gameboard.placeShip(player1.gameboard.ships[2], [2,1]);
-//     player1.gameboard.placeShip(player1.gameboard.ships[3], [6,5], "vertical")
-//     player1.gameboard.placeShip(player1.gameboard.ships[4], [5,9]);
-
-//     player2.gameboard.placeShip(player2.gameboard.ships[0], [0,5])
-//     player2.gameboard.placeShip(player2.gameboard.ships[1], [2,3])
-//     player2.gameboard.placeShip(player2.gameboard.ships[2], [2,1]);
-//     player2.gameboard.placeShip(player2.gameboard.ships[3], [6,5], "vertical")
-//     player2.gameboard.placeShip(player2.gameboard.ships[4], [5,9]);
-
-//     controller.currentPlayer = controller.players.player1
-
-//     render({players: controller.players, view: controller.view, root: gameContainer})
-// })();
-
 startGame();
 
 //Start game loads the home form page
-//Need to fix bug - 1 turn delay for computer to start working
 //Form not proplery setting player type
 //Need to decide how im going to display ships
 //Add a type checkout in actions to detrimine start-game vs in game rendering (avoids the ?. checks)
