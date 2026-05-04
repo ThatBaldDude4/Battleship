@@ -32,6 +32,7 @@ function actions(payload) {
             controller.players.player2 = new Player(payload.playersValues.player2Value);
             controller.view = "start-game";
             controller.currentPlayer = controller.players.player1;
+            controller.winner = null;
         };
     };
 
@@ -103,6 +104,20 @@ document.addEventListener("submit", (e) => {
         type: "start-game",
     });
 });
+
+//start-game in actions intializes everything, only thing you
+//need to carry forward is the playerType
+function resetRound() {
+    const player1Type = controller.players.player1.playerType;
+    const player2Type = controller.players.player1.playerType;
+    actions({
+        playersValues: {
+            player1Value: player1Type,
+            player2Value: player2Type,
+        },
+        type: "start-game",
+    });
+}
 
 function startGame() {
     render({root: gameContainer, view: controller.view})
