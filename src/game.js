@@ -3,16 +3,25 @@ class Ship {
         this.length = length;
         this.hits = 0;
         this.sunk = false;
+        this.isPlaced = false;
     };
 
     hit() {
         this.hits += 1;
-    }
+    };
 
     isSunk() {
         let result = this.hits >= this.length
         this.sunk = result;
         return result;
+    };
+
+    markPlaced() {
+        this.isPlaced = true;
+    };
+
+    markUnplaced() {
+        this.isPlaced = false;
     }
 }
 
@@ -33,6 +42,8 @@ class Gameboard {
         cordinates.forEach((pair) => {
             this.board[pair[0]][pair[1]].ship = ship;
         });
+
+        ship.markPlaced();
     };
 
     getCordSet(shipLength, intialCord, direction = "horizontal") {

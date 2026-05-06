@@ -2,12 +2,6 @@ import {Player, Gameboard, Ship} from "./game.js";
 import { createBoard, renderPlayersBoards, render } from "./ui.js";
 
 const gameContainer = document.getElementById("game-container");
-const player1Container = document.getElementById("player1-container");
-const player2Container = document.getElementById("player2-container");
-const player1Board = document.getElementById("player1-board");
-const player2Board = document.getElementById("player2-board");
-const player1Ships = document.getElementById("player1-ships");
-const player2Ships = document.getElementById("player2-ships");
 
 const controller = {
     currentPlayer: null,
@@ -150,11 +144,6 @@ function startGame() {
     render({root: gameContainer, view: controller.view})
 }
 startGame();
-
-//Start game loads the home form page
-//Form not proplery setting player type
-//Need to decide how im going to display ships
-//Add a type checkout in actions to detrimine start-game vs in game rendering (avoids the ?. checks)
 
 //After player type selection switch to ship placement.
 //After ship placement confirmed carry over the board data

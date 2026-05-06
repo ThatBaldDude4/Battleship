@@ -89,6 +89,7 @@ function renderShipPlacement(players) {
 
     if (players.player1.playerType === "human") {
         players.player1.gameboard.ships.forEach((ship, index) => {
+            if (ship.isPlaced) {return};
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;
             shipStr.setAttribute("draggable", "true");
@@ -104,6 +105,7 @@ function renderShipPlacement(players) {
 
     if (players.player2.playerType === "human") {
         players.player2.gameboard.ships.forEach((ship, index) => {
+            if (ship.isPlaced){return};
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;
             shipStr.setAttribute("draggable", "true");
