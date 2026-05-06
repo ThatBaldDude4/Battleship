@@ -105,6 +105,16 @@ document.addEventListener("submit", (e) => {
     });
 });
 
+document.addEventListener("dragover", (e) => {
+    e.preventDefault();
+})
+
+document.addEventListener("drop", (e) => {
+    e.preventDefault();
+    console.log(e.target.closest(".grid-cell").dataset.cord)
+    console.log("element dropped")
+})
+
 //start-game in actions intializes everything, only thing you
 //need to carry forward is the playerType
 function resetRound() {
