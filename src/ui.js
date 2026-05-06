@@ -91,7 +91,8 @@ function renderShipPlacement(players) {
         players.player1.gameboard.ships.forEach((ship, index) => {
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;
-            shipStr.setAttribute("draggable", "true")
+            shipStr.setAttribute("draggable", "true");
+            shipStr.setAttribute("data-index", index);
             for (let i = 0; i < ship.length; i++) {
                 let shipCell = document.createElement("div");
                 shipCell.className = `ship-cell`;
@@ -105,7 +106,8 @@ function renderShipPlacement(players) {
         players.player2.gameboard.ships.forEach((ship, index) => {
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;
-            shipStr.setAttribute("draggable", "true")
+            shipStr.setAttribute("draggable", "true");
+            shipStr.setAttribute("data-index", index);
             for (let i = 0; i < ship.length; i++) {
                 let shipCell = document.createElement("div");
                 shipCell.className = `ship-cell`;

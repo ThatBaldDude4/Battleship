@@ -26,6 +26,12 @@ function actions(payload) {
         return
     };
 
+    if (payload.type === "place-ship") {
+        const player = controller.players[payload.player];
+        const ship = player.gameboard.ships[payload.index];
+        player.gameboard.placeShip(ship, payload.cord, "vertical");
+    };
+
     if (payload.type === "start-game") {
         if (payload.playersValues) {
             controller.players.player1 = new Player(payload.playersValues.player1Value);
@@ -64,14 +70,14 @@ function actions(payload) {
                 render({view: controller.view, root: gameContainer, players: controller.players});
                 return;
             }
-        }
+        };
 
         if (defender.gameboard.allSunk()) {
             console.log("game over");
-        }
+        };
     };
 
-    render({players: controller.players, view: controller.view, root: gameContainer})
+    render({players: controller.players, view: controller.view, root: gameContainer});
 };
  
 // may want to refactor extra vars
@@ -81,7 +87,7 @@ document.addEventListener("click", (e) => {
     if (cords) {
         cords.splice(1, 1)
         finalCords = cords.map((str) => {return Number(str)})
-    }
+    };
     // convert cords string to numbers
 
     const player = e.target.closest(".board")?.dataset.player;
@@ -89,7 +95,7 @@ document.addEventListener("click", (e) => {
     if (cords && player) {
         console.log("attack sent")
         actions({cords: finalCords, player, type: "attack"})
-    }
+    };
 });
 
 document.addEventListener("submit", (e) => {
@@ -105,15 +111,26 @@ document.addEventListener("submit", (e) => {
     });
 });
 
+document.addEventListener("dragstart", (e) => {
+    e.dataTransfer.clearData();
+    e.dataTransfer.setData("text/plain", e.target.closest(".ship").dataset.index);
+});
+
 document.addEventListener("dragover", (e) => {
-    e.preventDefault();
+    if (e.target.closest(".grid-cell")) {
+        e.preventDefault();
+    }
 })
 
 document.addEventListener("drop", (e) => {
+    console.log("drop");
     e.preventDefault();
-    console.log(e.target.closest(".grid-cell").dataset.cord)
-    console.log("element dropped")
-})
+    console.log("element dropped");
+    const cord = e.target.closest(".grid-cell")?.dataset.cord?.split(",").map(Number);
+    const player = e.target.closest(".board")?.dataset.player;
+    const index = e.dataTransfer.getData("text/plain");
+    actions({index, player, type: "place-ship", cord}) 
+});
 
 //start-game in actions intializes everything, only thing you
 //need to carry forward is the playerType
@@ -144,3 +161,8 @@ startGame();
 //into the players boards
 //Render boards, then render ships below them
 //Use Drag and Drop API to place ships
+
+// Drag and drop listeners set up
+// Placing ships is set up
+// placing ships allows duplicates
+// placing ships allows you to place on the wrong board
