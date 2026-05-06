@@ -37,3 +37,15 @@
 .occupied.hit {
     background-color: red;
 }
+
+.ship-container {
+    display: flex;
+    gap: 10px;
+    min-width: 20px;
+}
+
+.ship-cell {
+    border: 2px solid red;
+    min-width: 20px;
+    min-height: 20px;
+}

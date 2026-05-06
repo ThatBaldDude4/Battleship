@@ -13,6 +13,11 @@ function render(payload) {
     };
     if (payload.view === "home") {
         renderHome(payload.root);
+    };
+    if (payload.view === "place-ships") {
+        payload.root.innerHTML = createPlayerContainers();
+        renderPlayersBoards(payload.players, payload.root);
+        renderShipPlacement(payload.players);
     }
 };
 
@@ -21,12 +26,12 @@ function createPlayerContainers() {
         <div id="player1-container">
             <h2>Player 1</h2>
             <div id="player1-board" class="board" data-player="player1"></div>
-            <div id="player1-ships"></div>
+            <div id="player1-ships" class="ship-container"></div>
         </div>
         <div id="player2-container">
             <h2>Player 2</h2>
             <div id="player2-board" class="board" data-player="player2"></div>
-            <div id="player2-ships"></div>
+            <div id="player2-ships" class="ship-container"></div>
         </div>
     `;
 };
@@ -45,7 +50,7 @@ function createBoard(board) {
 };
 
 function renderWinner(root) {
-    root.innerHTML += `<h1>THERE HAS BEEN A WINNER`;
+    root.innerHTML += `<h1>THERE HAS BEEN A WINNER</h1>`;
 }
 
 //may refactor so 2 container limit is removed
@@ -76,7 +81,40 @@ function renderHome(root) {
         <button>Submit</button>
     </form>
     `
-}
+};
+
+function renderShipPlacement(players) {
+    let player1ShipsContainer = document.getElementById("player1-ships");
+    let player2ShipsContainer = document.getElementById("player2-ships");
+
+    if (players.player1.playerType === "human") {
+        players.player1.gameboard.ships.forEach((ship, index) => {
+            let shipStr = document.createElement("div");
+            shipStr.className = `ship`;
+            shipStr.setAttribute("draggable", "true")
+            for (let i = 0; i < ship.length; i++) {
+                let shipCell = document.createElement("div");
+                shipCell.className = `ship-cell`;
+                shipStr.appendChild(shipCell);
+            };
+            player1ShipsContainer.appendChild(shipStr);
+        });
+    };
+
+    if (players.player2.playerType === "human") {
+        players.player2.gameboard.ships.forEach((ship, index) => {
+            let shipStr = document.createElement("div");
+            shipStr.className = `ship`;
+            shipStr.setAttribute("draggable", "true")
+            for (let i = 0; i < ship.length; i++) {
+                let shipCell = document.createElement("div");
+                shipCell.className = `ship-cell`;
+                shipStr.appendChild(shipCell);
+            };
+            player2ShipsContainer.appendChild(shipStr);
+        });
+    };
+};
 
 export {createBoard, renderPlayersBoards, render};
 

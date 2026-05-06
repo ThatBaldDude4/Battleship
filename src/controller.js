@@ -30,7 +30,7 @@ function actions(payload) {
         if (payload.playersValues) {
             controller.players.player1 = new Player(payload.playersValues.player1Value);
             controller.players.player2 = new Player(payload.playersValues.player2Value);
-            controller.view = "start-game";
+            controller.view = "place-ships";
             controller.currentPlayer = controller.players.player1;
             controller.winner = null;
         };
@@ -128,3 +128,9 @@ startGame();
 //Form not proplery setting player type
 //Need to decide how im going to display ships
 //Add a type checkout in actions to detrimine start-game vs in game rendering (avoids the ?. checks)
+
+//After player type selection switch to ship placement.
+//After ship placement confirmed carry over the board data
+//into the players boards
+//Render boards, then render ships below them
+//Use Drag and Drop API to place ships
