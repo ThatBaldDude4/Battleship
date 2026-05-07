@@ -20,9 +20,15 @@ function actions(payload) {
         return
     };
 
+    if (payload.type === "") {
+
+    }
+
     if (payload.type === "place-ship") {
+        const shipOwner = controller.players[payload.shipOwner];
         const player = controller.players[payload.player];
         const ship = player.gameboard.ships[payload.index];
+        if (shipOwner !== player) {return};
         player.gameboard.placeShip(ship, payload.cord, "vertical");
     };
 
@@ -36,7 +42,7 @@ function actions(payload) {
         };
     };
 
-    if (payload.type === "attack") {
+    if (payload.type === "attack" && controller.view !== "place-ships") {
         const defender = controller.players[payload.player];
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
@@ -85,6 +91,7 @@ document.addEventListener("click", (e) => {
     // convert cords string to numbers
 
     const player = e.target.closest(".board")?.dataset.player;
+    const startBtn = e.target.closest("#start-game-button");
 
     if (cords && player) {
         console.log("attack sent")
@@ -108,6 +115,10 @@ document.addEventListener("submit", (e) => {
 document.addEventListener("dragstart", (e) => {
     e.dataTransfer.clearData();
     e.dataTransfer.setData("text/plain", e.target.closest(".ship").dataset.index);
+
+    const shipContainer = e.target.closest(".ship-container");
+    const shipsPlayer = shipContainer?.dataset.player;
+    e.dataTransfer.setData("ship-owner", shipsPlayer);
 });
 
 document.addEventListener("dragover", (e) => {
@@ -123,7 +134,8 @@ document.addEventListener("drop", (e) => {
     const cord = e.target.closest(".grid-cell")?.dataset.cord?.split(",").map(Number);
     const player = e.target.closest(".board")?.dataset.player;
     const index = e.dataTransfer.getData("text/plain");
-    actions({index, player, type: "place-ship", cord}) 
+    const shipOwner = e.dataTransfer.getData("ship-owner");
+    actions({index, player, type: "place-ship", cord, shipOwner}) 
 });
 
 //start-game in actions intializes everything, only thing you
@@ -149,9 +161,30 @@ startGame();
 //After ship placement confirmed carry over the board data
 //into the players boards
 //Render boards, then render ships below them
-//Use Drag and Drop API to place ships
 
 // Drag and drop listeners set up
 // Placing ships is set up
-// placing ships allows duplicates
-// placing ships allows you to place on the wrong board
+
+// Need to have a rotate ship button
+// Need to not allow attacks during ship placments
+// Need to have random ship placements for computers
+// Need a start game button after all ships placed
+
+// Need to rename "views" so that they are more descriptive and accurate
+
+// Load form ->
+// Load boards to place ships ->
+// After ship placements finalized -> 
+// Allow attacks ->
+// Once player wins -> 
+// display win screen ->
+
+// If new game selected go to form
+// If continue selected go to ship placements
+
+// Form (player type)
+// Place Ships (board + ships)
+// Battle (attacks)
+// Game Over (player won)
+// Reset Game -> go to place ships
+// New game -> go to player form

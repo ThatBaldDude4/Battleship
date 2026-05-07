@@ -26,13 +26,14 @@ function createPlayerContainers() {
         <div id="player1-container">
             <h2>Player 1</h2>
             <div id="player1-board" class="board" data-player="player1"></div>
-            <div id="player1-ships" class="ship-container"></div>
+            <div id="player1-ships" class="ship-container" data-player="player1"></div>
         </div>
         <div id="player2-container">
             <h2>Player 2</h2>
             <div id="player2-board" class="board" data-player="player2"></div>
-            <div id="player2-ships" class="ship-container"></div>
+            <div id="player2-ships" class="ship-container" data-player="player2"></div>
         </div>
+        <button id="start-game-button">START</button>
     `;
 };
 
