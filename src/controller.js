@@ -20,10 +20,6 @@ function actions(payload) {
         return
     };
 
-    if (payload.type === "") {
-
-    }
-
     if (payload.type === "place-ship") {
         const shipOwner = controller.players[payload.shipOwner];
         const player = controller.players[payload.player];
@@ -97,6 +93,10 @@ document.addEventListener("click", (e) => {
         console.log("attack sent")
         actions({cords: finalCords, player, type: "attack"})
     };
+    if (startBtn) {
+        console.log("start button clicked");
+        // Once view is refactored finish here
+    }
 });
 
 document.addEventListener("submit", (e) => {
