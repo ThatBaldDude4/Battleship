@@ -1,20 +1,20 @@
-// payload = {players, root, view}
+// payload = {players, root, phase}
 function render(payload) {
-    if (payload.view === "start-game") {
+    if (payload.phase === "start-game") {
         payload.root.innerHTML = createPlayerContainers();
         renderPlayersBoards(payload.players, payload.root);
     };
-    if (payload.view === "playing") {
+    if (payload.phase === "playing") {
         renderPlayersBoards(payload.players, payload.root);
     };
-    if (payload.view === "won") {
+    if (payload.phase === "won") {
         renderPlayersBoards(payload.players, payload.root);
         renderWinner(payload.root)
     };
-    if (payload.view === "home") {
+    if (payload.phase === "home") {
         renderHome(payload.root);
     };
-    if (payload.view === "place-ships") {
+    if (payload.phase === "place-ships") {
         payload.root.innerHTML = createPlayerContainers();
         renderPlayersBoards(payload.players, payload.root);
         renderShipPlacement(payload.players);

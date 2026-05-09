@@ -6,7 +6,7 @@ const gameContainer = document.getElementById("game-container");
 const controller = {
     currentPlayer: null,
     winner: null,
-    view: "home",
+    phase: "home",
     players: {
         player1: new Player("Human"),
         player2: new Player("Computer"),
@@ -32,38 +32,38 @@ function actions(payload) {
         if (payload.playersValues) {
             controller.players.player1 = new Player(payload.playersValues.player1Value);
             controller.players.player2 = new Player(payload.playersValues.player2Value);
-            controller.view = "place-ships";
+            controller.phase = "place-ships";
             controller.currentPlayer = controller.players.player1;
             controller.winner = null;
         };
     };
 
-    if (payload.type === "attack" && controller.view !== "place-ships") {
+    if (payload.type === "attack" && controller.phase !== "place-ships") {
         const defender = controller.players[payload.player];
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
         // currentPlayer is defending and the clicked cell hasn't been clicked before
         if (defender !== controller.currentPlayer && !cell?.isHit) {
-            controller.view = "playing";
+            controller.phase = "playing";
             defender.gameboard.receiveAttack(payload.cords);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
             if (defender.gameboard.allSunk()) {
-                controller.view = "won";
-                render({view: controller.view, root: gameContainer, players: controller.players});
+                controller.phase = "won";
+                render({phase: controller.phase, root: gameContainer, players: controller.players});
                 return
             }
         };
 
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
             console.log(defender.playerType)
-            controller.view = "playing";
+            controller.phase = "playing";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
             if (attacker.gameboard.allSunk()) {
-                controller.view = "won";
-                render({view: controller.view, root: gameContainer, players: controller.players});
+                controller.phase = "won";
+                render({phase: controller.phase, root: gameContainer, players: controller.players});
                 return;
             }
         };
@@ -73,7 +73,7 @@ function actions(payload) {
         };
     };
 
-    render({players: controller.players, view: controller.view, root: gameContainer});
+    render({players: controller.players, phase: controller.phase, root: gameContainer});
 };
  
 // may want to refactor extra vars
@@ -95,7 +95,7 @@ document.addEventListener("click", (e) => {
     };
     if (startBtn) {
         console.log("start button clicked");
-        // Once view is refactored finish here
+        // Once phase is refactored finish here
     }
 });
 
@@ -153,7 +153,7 @@ function resetRound() {
 }
 
 function startGame() {
-    render({root: gameContainer, view: controller.view})
+    render({root: gameContainer, phase: controller.phase})
 }
 startGame();
 
@@ -170,7 +170,7 @@ startGame();
 // Need to have random ship placements for computers
 // Need a start game button after all ships placed
 
-// Need to rename "views" so that they are more descriptive and accurate
+// Need to rename "phases" so that they are more descriptive and accurate
 
 // Load form ->
 // Load boards to place ships ->
