@@ -43,6 +43,17 @@ function actions(payload) {
             controller.phase = "ship-placement";
             controller.currentPlayer = controller.players.player1;
             controller.winner = null;
+
+            let player1 = controller.players.player1;
+            let player2 = controller.players.player2;
+
+            if (player1.playerType === "computer") {
+                player1.gameboard.computerPlaceAllShips();
+            };
+            if (player2.playerType === "computer") {
+                console.log("im a computer 2")
+                player2.gameboard.computerPlaceAllShips();
+            }
         };
     };
 
@@ -123,7 +134,7 @@ document.addEventListener("submit", (e) => {
 
 document.addEventListener("dragstart", (e) => {
     e.dataTransfer.clearData();
-    e.dataTransfer.setData("text/plain", e.target.closest(".ship").dataset.index);
+    e.dataTransfer.setData("text/plain", e.target.closest(".ship")?.dataset.index);
 
     const shipContainer = e.target.closest(".ship-container");
     const shipsPlayer = shipContainer?.dataset.player;

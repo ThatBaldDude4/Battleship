@@ -11,7 +11,6 @@ function render(payload) {
         renderHome(payload.root);
     };
     if (payload.phase === "ship-placement") {
-        console.log("fired")
         payload.root.innerHTML = createPlayerContainers();
         renderPlayersBoards(payload.players, payload.root);
         renderShipPlacement(payload.players);

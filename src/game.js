@@ -50,6 +50,26 @@ class Gameboard {
         ship.markPlaced();
     };
 
+    computerPlaceAllShips() {
+        this.ships.forEach((ship) => {
+            while (!ship.isPlaced) {
+                let direction = Math.random > 0.5 ? "horizontal" : "vertical";
+                this.placeShip(ship, this.getRandomCoordinate(), direction)
+            }
+        })
+    };
+
+    getRandomCoordinate() {
+        let possibleMoves = [];
+        this.board.forEach((array, y) => {
+            array.forEach((cell, x) => {
+                possibleMoves.push([x, y]);
+            })
+        })
+        let randomIndex = Math.floor(Math.random() * ((possibleMoves.length - 1) - 0 + 1)) + 0;
+        return possibleMoves[randomIndex];
+    };
+
     getCordSet(shipLength, intialCord, direction = "horizontal") {
         let set = [];
         let offset;
@@ -108,6 +128,7 @@ class Player {
         this.possibleMoves = this.getAllMoves();
     };
 
+    // get all possible coordinates from 2d array
     getAllMoves() {
         let possibleMoves = [];
         this.gameboard.board.forEach((array, y) => {
@@ -118,6 +139,7 @@ class Player {
         return possibleMoves;
     };
 
+    // Grab all stored possibleMoves, select one and remove it from the list
     computerMove() {
         let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
         let randomMove = this.possibleMoves[randomIndex];
