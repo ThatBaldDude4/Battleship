@@ -32,8 +32,9 @@ function actions(payload) {
         const shipOwner = controller.players[payload.shipOwner];
         const player = controller.players[payload.player];
         const ship = player.gameboard.ships[payload.index];
+        const direction = payload.shipDirection;
         if (shipOwner !== player) {return};
-        player.gameboard.placeShip(ship, payload.cord, "vertical");
+        player.gameboard.placeShip(ship, payload.cord, direction);
     };
 
     if (payload.type === "start-game") {
@@ -119,6 +120,17 @@ document.addEventListener("click", (e) => {
     }
 });
 
+// double click ship to switch direction attribute
+document.addEventListener("dblclick", (e) => {
+    const ship = e.target.closest(".ship");
+    if (ship) {
+        let direction = ship.dataset.direction;
+        if (!direction) {ship.setAttribute("data-direction", "vertical")};
+        direction = direction === "horizontal" ? "vertical" : "horizontal";
+        ship.setAttribute("data-direction", direction)
+    };
+})
+
 document.addEventListener("submit", (e) => {
     e.preventDefault();
     const player1Value = document.getElementById("player1-selection").value;
@@ -138,7 +150,9 @@ document.addEventListener("dragstart", (e) => {
 
     const shipContainer = e.target.closest(".ship-container");
     const shipsPlayer = shipContainer?.dataset.player;
+    const ship = e.target.closest(".ship");
     e.dataTransfer.setData("ship-owner", shipsPlayer);
+    e.dataTransfer.setData("direction", ship?.dataset.direction);
 });
 
 document.addEventListener("dragover", (e) => {
@@ -155,7 +169,8 @@ document.addEventListener("drop", (e) => {
     const player = e.target.closest(".board")?.dataset.player;
     const index = e.dataTransfer.getData("text/plain");
     const shipOwner = e.dataTransfer.getData("ship-owner");
-    actions({index, player, type: "ship-placement", cord, shipOwner}) 
+    const shipDirection = e.dataTransfer.getData("direction");
+    actions({index, player, type: "ship-placement", cord, shipOwner, shipDirection}) 
 });
 
 //start-game in actions intializes everything, only thing you
@@ -190,21 +205,7 @@ startGame();
 // Need to have random ship placements for computers
 // Need a start game button after all ships placed
 
-// Need to rename "phases" so that they are more descriptive and accurate
+// Double click unplaced ship to change direction
+// Need to rerender each ship
 
-// Load form ->
-// Load boards to place ships ->
-// After ship placements finalized -> 
-// Allow attacks ->
-// Once player wins -> 
-// display win screen ->
-
-// If new game selected go to form
-// If continue selected go to ship placements
-
-// Form (player type)
-// Place Ships (board + ships)
-// Battle (attacks)
-// Game Over (player won)
-// Reset Game -> go to place ships
-// New game -> go to player form
+// TODO: Refactor ship direction into state instead of mutating DOM dataset directly

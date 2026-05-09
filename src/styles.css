@@ -40,6 +40,8 @@
 
 .ship-container {
     display: flex;
+    flex-wrap: wrap;
+    max-width: 200px;
     gap: 10px;
     min-width: 20px;
 }
@@ -48,4 +50,18 @@
     border: 2px solid red;
     min-width: 20px;
     min-height: 20px;
+    max-height: 20px;
+}
+
+.ship {
+  display: flex;
+  flex-direction: column;
+}
+
+.ship[data-direction="horizontal"] {
+  flex-direction: row;
+}
+
+.ship[data-direction="vertical"] {
+  flex-direction: column;
 }
