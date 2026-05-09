@@ -20,6 +20,14 @@ function actions(payload) {
         return
     };
 
+    if (payload.type === "start-battle") {
+        let shipsCheck1 = controller.players.player1.gameboard.allPlaced();
+        let shipCheck2 = controller.players.player2.gameboard.allPlaced();
+        if (shipsCheck1 && shipCheck2) {
+            controller.phase = "battle";
+        }
+    }
+
     if (payload.type === "ship-placement") {
         const shipOwner = controller.players[payload.shipOwner];
         const player = controller.players[payload.player];
@@ -38,14 +46,14 @@ function actions(payload) {
         };
     };
 
-    if (payload.type === "battle" && controller.phase !== "ship-placement") {
+    if (payload.type === "attack" && controller.phase === "battle") {
         const defender = controller.players[payload.player];
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
         // currentPlayer is defending and the clicked cell hasn't been clicked before
         if (defender !== controller.currentPlayer && !cell?.isHit) {
-            controller.phase = "playing";
+            controller.phase = "battle";
             defender.gameboard.receiveAttack(payload.cords);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
             if (defender.gameboard.allSunk()) {
@@ -57,7 +65,7 @@ function actions(payload) {
 
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
             console.log(defender.playerType)
-            controller.phase = "playing";
+            controller.phase = "battle";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
@@ -91,10 +99,11 @@ document.addEventListener("click", (e) => {
 
     if (cords && player) {
         console.log("attack sent")
-        actions({cords: finalCords, player, type: "battle"})
+        actions({cords: finalCords, player, type: "attack"})
     };
     if (startBtn) {
         console.log("start button clicked");
+        actions({type: "start-battle"})
         // Once phase is refactored finish here
     }
 });

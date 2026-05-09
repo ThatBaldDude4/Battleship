@@ -33,6 +33,10 @@ class Gameboard {
             })
         });
         this.ships = [new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2)];
+    };
+
+    allPlaced() {
+        return this.ships.every(ship => ship.isPlaced);
     }
 
     placeShip(ship, cord, direction = "horizontal") {
