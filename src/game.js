@@ -53,10 +53,11 @@ class Gameboard {
     computerPlaceAllShips() {
         this.ships.forEach((ship) => {
             while (!ship.isPlaced) {
-                let direction = Math.random > 0.5 ? "horizontal" : "vertical";
+                console.log(this.board);
+                let direction = Math.random() > 0.5 ? "horizontal" : "vertical";
                 this.placeShip(ship, this.getRandomCoordinate(), direction)
             }
-        })
+        });
     };
 
     getRandomCoordinate() {
@@ -94,9 +95,12 @@ class Gameboard {
     // makes sure each cell isnt occupied 
     validateCord(cordSet) {
         let checked = cordSet.every(([x, y]) => {
+            let rangeCheck = x <= 9 && x >= 0 && y <= 9 && y >= 0;
+            if (!rangeCheck) {
+                return false
+            }
             let cell = this.board[x][y];
             let cellCheck = !cell?.ship
-            let rangeCheck = x <= 9 && x >= 0 && y <= 9 && y >= 0;
             return cellCheck && rangeCheck;
         });
         return checked;
