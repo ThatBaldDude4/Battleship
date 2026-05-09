@@ -38,7 +38,7 @@ function actions(payload) {
         };
     };
 
-    if (payload.type === "attack" && controller.phase !== "ship-placement") {
+    if (payload.type === "battle" && controller.phase !== "ship-placement") {
         const defender = controller.players[payload.player];
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
@@ -49,7 +49,7 @@ function actions(payload) {
             defender.gameboard.receiveAttack(payload.cords);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
             if (defender.gameboard.allSunk()) {
-                controller.phase = "won";
+                controller.phase = "game-over";
                 render({phase: controller.phase, root: gameContainer, players: controller.players});
                 return
             }
@@ -62,7 +62,7 @@ function actions(payload) {
             attacker.gameboard.receiveAttack(attackCord);
             controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
             if (attacker.gameboard.allSunk()) {
-                controller.phase = "won";
+                controller.phase = "game-over";
                 render({phase: controller.phase, root: gameContainer, players: controller.players});
                 return;
             }
@@ -91,7 +91,7 @@ document.addEventListener("click", (e) => {
 
     if (cords && player) {
         console.log("attack sent")
-        actions({cords: finalCords, player, type: "attack"})
+        actions({cords: finalCords, player, type: "battle"})
     };
     if (startBtn) {
         console.log("start button clicked");
