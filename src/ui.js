@@ -4,20 +4,20 @@ function render(payload) {
         payload.root.innerHTML = createPlayerContainers();
         renderPlayersBoards(payload.players, payload.root);
     };
-    if (payload.phase === "playing") {
+    if (payload.phase === "battle") {
         renderPlayersBoards(payload.players, payload.root);
     };
-    if (payload.phase === "won") {
-        renderPlayersBoards(payload.players, payload.root);
-        renderWinner(payload.root)
-    };
-    if (payload.phase === "home") {
+    if (payload.phase === "setup") {
         renderHome(payload.root);
     };
-    if (payload.phase === "place-ships") {
+    if (payload.phase === "ship-placement") {
+        console.log("fired")
         payload.root.innerHTML = createPlayerContainers();
         renderPlayersBoards(payload.players, payload.root);
         renderShipPlacement(payload.players);
+    };
+    if (payload.phase === "game-over") {
+        renderWinner(payload.root);
     }
 };
 
@@ -51,7 +51,8 @@ function createBoard(board) {
 };
 
 function renderWinner(root) {
-    root.innerHTML += `<h1>THERE HAS BEEN A WINNER</h1>`;
+    root.innerHTML = `<h1>THERE HAS BEEN A WINNER</h1>`;
+    // eventually add reset/new game buttons here
 }
 
 //may refactor so 2 container limit is removed

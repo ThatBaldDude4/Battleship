@@ -6,11 +6,11 @@ const gameContainer = document.getElementById("game-container");
 const controller = {
     currentPlayer: null,
     winner: null,
-    phase: "home",
+    phase: "setup",
     players: {
         player1: new Player("Human"),
         player2: new Player("Computer"),
-    }
+    },
 };
 
 function actions(payload) {
@@ -20,7 +20,7 @@ function actions(payload) {
         return
     };
 
-    if (payload.type === "place-ship") {
+    if (payload.type === "ship-placement") {
         const shipOwner = controller.players[payload.shipOwner];
         const player = controller.players[payload.player];
         const ship = player.gameboard.ships[payload.index];
@@ -32,13 +32,13 @@ function actions(payload) {
         if (payload.playersValues) {
             controller.players.player1 = new Player(payload.playersValues.player1Value);
             controller.players.player2 = new Player(payload.playersValues.player2Value);
-            controller.phase = "place-ships";
+            controller.phase = "ship-placement";
             controller.currentPlayer = controller.players.player1;
             controller.winner = null;
         };
     };
 
-    if (payload.type === "attack" && controller.phase !== "place-ships") {
+    if (payload.type === "attack" && controller.phase !== "ship-placement") {
         const defender = controller.players[payload.player];
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
@@ -135,7 +135,7 @@ document.addEventListener("drop", (e) => {
     const player = e.target.closest(".board")?.dataset.player;
     const index = e.dataTransfer.getData("text/plain");
     const shipOwner = e.dataTransfer.getData("ship-owner");
-    actions({index, player, type: "place-ship", cord, shipOwner}) 
+    actions({index, player, type: "ship-placement", cord, shipOwner}) 
 });
 
 //start-game in actions intializes everything, only thing you
