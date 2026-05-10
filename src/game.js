@@ -53,7 +53,6 @@ class Gameboard {
     computerPlaceAllShips() {
         this.ships.forEach((ship) => {
             while (!ship.isPlaced) {
-                console.log(this.board);
                 let direction = Math.random() > 0.5 ? "horizontal" : "vertical";
                 this.placeShip(ship, this.getRandomCoordinate(), direction)
             }
@@ -126,10 +125,11 @@ class Gameboard {
 };
 
 class Player {
-    constructor(playerType = "computer") {
+    constructor(playerType = "computer", playerId) {
         this.gameboard = new Gameboard();
         this.playerType = playerType.toLowerCase();
         this.possibleMoves = this.getAllMoves();
+        this.playerId = playerId;
     };
 
     // get all possible coordinates from 2d array

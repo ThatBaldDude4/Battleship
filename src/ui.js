@@ -56,8 +56,8 @@ function renderWinner(root) {
 
 //may refactor so 2 container limit is removed
 function renderPlayersBoards(players, root) {
-    let boardStr1 = createBoard(players.player1.gameboard.board);
-    let boardStr2 = createBoard(players.player2.gameboard.board);
+    let boardStr1 = createBoard(players[0].gameboard.board);
+    let boardStr2 = createBoard(players[1].gameboard.board);
     root.querySelector("#player1-board").innerHTML = boardStr1;
     root.querySelector("#player2-board").innerHTML = boardStr2;
 }
@@ -88,8 +88,8 @@ function renderShipPlacement(players) {
     let player1ShipsContainer = document.getElementById("player1-ships");
     let player2ShipsContainer = document.getElementById("player2-ships");
 
-    if (players.player1.playerType === "human") {
-        players.player1.gameboard.ships.forEach((ship, index) => {
+    if (players[0].playerType === "human") {
+        players[0].gameboard.ships.forEach((ship, index) => {
             if (ship.isPlaced) {return};
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;
@@ -105,8 +105,8 @@ function renderShipPlacement(players) {
         });
     };
 
-    if (players.player2.playerType === "human") {
-        players.player2.gameboard.ships.forEach((ship, index) => {
+    if (players[1].playerType === "human") {
+        players[1].gameboard.ships.forEach((ship, index) => {
             if (ship.isPlaced){return};
             let shipStr = document.createElement("div");
             shipStr.className = `ship`;

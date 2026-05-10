@@ -7,10 +7,7 @@ const controller = {
     currentPlayer: null,
     winner: null,
     phase: "setup",
-    players: {
-        player1: new Player("Human"),
-        player2: new Player("Computer"),
-    },
+    players: [new Player("Human", "player1"), new Player("Computer", "player2")]
 };
 
 function actions(payload) {
@@ -21,16 +18,17 @@ function actions(payload) {
     };
 
     if (payload.type === "start-battle") {
-        let shipsCheck1 = controller.players.player1.gameboard.allPlaced();
-        let shipCheck2 = controller.players.player2.gameboard.allPlaced();
-        if (shipsCheck1 && shipCheck2) {
+        // check to make sure every player has all ships placed
+        if (controller.players.every(player => player.gameboard.allPlaced())) {
             controller.phase = "battle";
         }
     }
 
     if (payload.type === "ship-placement") {
-        const shipOwner = controller.players[payload.shipOwner];
-        const player = controller.players[payload.player];
+        const shipOwner = getPlayersFromId(controller.players, payload.shipOwner);
+        console.log(shipOwner, "ship owner")
+        const player = getPlayersFromId(controller.players, payload.player);
+        console.log(player)
         const ship = player.gameboard.ships[payload.index];
         const direction = payload.shipDirection;
         if (shipOwner !== player) {return};
@@ -39,14 +37,14 @@ function actions(payload) {
 
     if (payload.type === "start-game") {
         if (payload.playersValues) {
-            controller.players.player1 = new Player(payload.playersValues.player1Value);
-            controller.players.player2 = new Player(payload.playersValues.player2Value);
+            controller.players[0] = new Player(payload.playersValues.player1Value, "player1");
+            controller.players[1] = new Player(payload.playersValues.player2Value, "player2");
             controller.phase = "ship-placement";
-            controller.currentPlayer = controller.players.player1;
+            controller.currentPlayer = controller.players[0];
             controller.winner = null;
 
-            let player1 = controller.players.player1;
-            let player2 = controller.players.player2;
+            let player1 = controller.players[0];
+            let player2 = controller.players[1];
 
             if (player1.playerType === "computer") {
                 player1.gameboard.computerPlaceAllShips();
@@ -59,7 +57,7 @@ function actions(payload) {
     };
 
     if (payload.type === "attack" && controller.phase === "battle") {
-        const defender = controller.players[payload.player];
+        const defender = getPlayersFromId(controller.players, payload.player)
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
@@ -76,7 +74,7 @@ function actions(payload) {
         };
 
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
-            console.log(defender.playerType)
+            console.log("computer attack")
             controller.phase = "battle";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
@@ -164,7 +162,6 @@ document.addEventListener("dragover", (e) => {
 document.addEventListener("drop", (e) => {
     console.log("drop");
     e.preventDefault();
-    console.log("element dropped");
     const cord = e.target.closest(".grid-cell")?.dataset.cord?.split(",").map(Number);
     const player = e.target.closest(".board")?.dataset.player;
     const index = e.dataTransfer.getData("text/plain");
@@ -185,6 +182,10 @@ function resetRound() {
         },
         type: "start-game",
     });
+};
+
+function getPlayersFromId(players, id) {
+    return players.find(player => player.playerId === id);
 }
 
 function startGame() {
@@ -208,4 +209,4 @@ startGame();
 // Double click unplaced ship to change direction
 // Need to rerender each ship
 
-// TODO: Refactor ship direction into state instead of mutating DOM dataset directly
+// TODO: Refactor ship direction into state/ui/render instead of mutating DOM dataset directly
