@@ -65,7 +65,7 @@ function actions(payload) {
         if (defender !== controller.currentPlayer && !cell?.isHit) {
             controller.phase = "battle";
             defender.gameboard.receiveAttack(payload.cords);
-            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2 : controller.players.player1;
+            switchCurrentPlayer()
             if (defender.gameboard.allSunk()) {
                 controller.phase = "game-over";
                 render({phase: controller.phase, root: gameContainer, players: controller.players});
@@ -78,7 +78,7 @@ function actions(payload) {
             controller.phase = "battle";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
-            controller.currentPlayer = controller.currentPlayer === controller.players.player1 ? controller.players.player2: controller.players.player1;
+            switchCurrentPlayer()
             if (attacker.gameboard.allSunk()) {
                 controller.phase = "game-over";
                 render({phase: controller.phase, root: gameContainer, players: controller.players});
@@ -186,7 +186,14 @@ function resetRound() {
 
 function getPlayersFromId(players, id) {
     return players.find(player => player.playerId === id);
-}
+};
+
+// flips current player from player1 to player2 and vice versa
+function switchCurrentPlayer() {
+    controller.currentPlayer = controller.currentPlayer === controller.players[0] ?
+    controller.players[1] :
+    controller.players[0];
+};
 
 function startGame() {
     render({root: gameContainer, phase: controller.phase})
