@@ -22,6 +22,7 @@ function actions(payload) {
         if (controller.players.every(player => player.gameboard.allPlaced())) {
             controller.phase = "battle";
         }
+        handleComputerTurns();
     }
 
     if (payload.type === "ship-placement") {
@@ -184,6 +185,25 @@ function resetRound() {
     });
 };
 
+function handleComputerTurns() {
+    if (controller.currentPlayer.playerType !== "computer") {return}
+    const attacker = controller.currentPlayer;
+    const defender = controller.players[0] === attacker ? controller.players[1] : controller.players[0];
+    let attack = attacker.computerMove();
+    defender.gameboard.receiveAttack(attack);
+    if (defender.gameboard.allSunk()) {
+        controller.phase = "game-over";
+        render({phase: controller.phase, root: gameContainer, players: controller.players});
+        return;
+    }
+    switchCurrentPlayer()
+    render({phase: controller.phase, root: gameContainer, players: controller.players});
+
+    if (controller.phase === "battle") {
+        setTimeout(handleComputerTurns, 100);
+    }
+};
+
 function getPlayersFromId(players, id) {
     return players.find(player => player.playerId === id);
 };
@@ -217,3 +237,5 @@ startGame();
 // Need to rerender each ship
 
 // TODO: Refactor ship direction into state/ui/render instead of mutating DOM dataset directly
+// TODO: Refactor attack action to flow better and to acount for computer v computer
+// TODO: After start game check if currentPlayer is computer if so start attack
