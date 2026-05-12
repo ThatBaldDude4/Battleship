@@ -16,7 +16,7 @@ function render(payload) {
         renderShipPlacement(payload.players);
     };
     if (payload.phase === "game-over") {
-        renderWinner(payload.root);
+        renderWinner(payload.root, payload.winner);
     }
 };
 
@@ -49,8 +49,15 @@ function createBoard(board) {
     return html;
 };
 
-function renderWinner(root) {
-    root.innerHTML = `<h1>THERE HAS BEEN A WINNER</h1>`;
+function renderWinner(root, winner) {
+    root.innerHTML = `
+    <h1>THERE HAS BEEN A WINNER</h1>
+    <div>
+        <h2>${winner.playerId.toUpperCase()} WON</h2>
+        <button class="reset-button">RESET GAME</button>
+        <button class="new-game-button">NEW GAME</button>
+    </div>
+    `;
     // eventually add reset/new game buttons here
 }
 

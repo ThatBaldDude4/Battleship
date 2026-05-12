@@ -12,10 +12,6 @@ const controller = {
 
 function actions(payload) {
     if (!payload){return};
-    if (controller.winner) {
-        console.log("game already won"); 
-        return
-    };
 
     if (payload.type === "start-battle") {
         // check to make sure every player has all ships placed
@@ -38,24 +34,19 @@ function actions(payload) {
 
     if (payload.type === "start-game") {
         if (payload.playersValues) {
-            controller.players[0] = new Player(payload.playersValues.player1Value, "player1");
-            controller.players[1] = new Player(payload.playersValues.player2Value, "player2");
-            controller.phase = "ship-placement";
-            controller.currentPlayer = controller.players[0];
-            controller.winner = null;
-
-            let player1 = controller.players[0];
-            let player2 = controller.players[1];
-
-            if (player1.playerType === "computer") {
-                player1.gameboard.computerPlaceAllShips();
-            };
-            if (player2.playerType === "computer") {
-                console.log("im a computer 2")
-                player2.gameboard.computerPlaceAllShips();
-            }
+            startNewGame(payload.playersValues)
         };
     };
+
+    if (payload.type === "reset-game") {
+        console.log(controller.players)
+        startNewGame({
+            player1Value: controller.players[0].playerType,
+            player2Value: controller.players[1].playerType,
+        });
+
+        console.log(controller.players[0].playerType)
+    }
 
     if (payload.type === "attack" && controller.phase === "battle") {
         const defender = getPlayersFromId(controller.players, payload.player)
@@ -69,7 +60,8 @@ function actions(payload) {
             switchCurrentPlayer()
             if (defender.gameboard.allSunk()) {
                 controller.phase = "game-over";
-                render({phase: controller.phase, root: gameContainer, players: controller.players});
+                controller.winner = attacker;
+                render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
                 return
             }
         };
@@ -82,14 +74,12 @@ function actions(payload) {
             switchCurrentPlayer()
             if (attacker.gameboard.allSunk()) {
                 controller.phase = "game-over";
-                render({phase: controller.phase, root: gameContainer, players: controller.players});
+                controller.winner = defender;
+                render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
                 return;
             }
         };
 
-        if (defender.gameboard.allSunk()) {
-            console.log("game over");
-        };
     };
 
     render({players: controller.players, phase: controller.phase, root: gameContainer});
@@ -97,25 +87,29 @@ function actions(payload) {
  
 // may want to refactor extra vars
 document.addEventListener("click", (e) => {
-    const cords = e.target.closest(".grid-cell")?.dataset.cord.split("");
-    let finalCords;
-    if (cords) {
-        cords.splice(1, 1)
-        finalCords = cords.map((str) => {return Number(str)})
-    };
     // convert cords string to numbers
-
+    const cords = e.target.closest(".grid-cell")?.dataset.cord.split(",").map(Number);
+    
     const player = e.target.closest(".board")?.dataset.player;
     const startBtn = e.target.closest("#start-game-button");
 
+    const resetBtn = e.target.closest(".reset-button");
+    const newGameBtn = e.target.closest(".new-game-button");
+
     if (cords && player) {
         console.log("attack sent")
-        actions({cords: finalCords, player, type: "attack"})
+        actions({cords: cords, player, type: "attack"})
     };
     if (startBtn) {
         console.log("start button clicked");
         actions({type: "start-battle"})
         // Once phase is refactored finish here
+    };
+    if (resetBtn) {
+        actions({type: "reset-game"})
+    };
+    if (newGameBtn) {
+        console.log("new game")
     }
 });
 
@@ -171,6 +165,29 @@ document.addEventListener("drop", (e) => {
     actions({index, player, type: "ship-placement", cord, shipOwner, shipDirection}) 
 });
 
+function startNewGame(playersValues) {
+    if (!playersValues) {return};
+
+    controller.players[0] = new Player(playersValues.player1Value, "player1");
+    controller.players[1] = new Player(playersValues.player2Value, "player2");
+    console.log(playersValues.player1Value)
+    controller.phase = "ship-placement";
+    controller.currentPlayer = controller.players[0];
+    controller.winner = null;
+
+    let player1 = controller.players[0];
+    let player2 = controller.players[1];
+
+    if (player1.playerType === "computer") {
+        player1.gameboard.computerPlaceAllShips();
+    };
+    if (player2.playerType === "computer") {
+        console.log("im a computer 2")
+        player2.gameboard.computerPlaceAllShips();
+    };
+    console.log(controller)
+}
+
 //start-game in actions intializes everything, only thing you
 //need to carry forward is the playerType
 function resetRound() {
@@ -193,14 +210,15 @@ function handleComputerTurns() {
     defender.gameboard.receiveAttack(attack);
     if (defender.gameboard.allSunk()) {
         controller.phase = "game-over";
-        render({phase: controller.phase, root: gameContainer, players: controller.players});
+        controller.winner = attacker;
+        render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
         return;
     }
     switchCurrentPlayer()
     render({phase: controller.phase, root: gameContainer, players: controller.players});
 
     if (controller.phase === "battle") {
-        setTimeout(handleComputerTurns, 100);
+        setTimeout(handleComputerTurns, 10);
     }
 };
 
@@ -239,3 +257,4 @@ startGame();
 // TODO: Refactor ship direction into state/ui/render instead of mutating DOM dataset directly
 // TODO: Refactor attack action to flow better and to acount for computer v computer
 // TODO: After start game check if currentPlayer is computer if so start attack
+// TODO: Refactor attack actions to split resposibilty and to not handle so much directly
