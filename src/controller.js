@@ -67,7 +67,6 @@ function actions(payload) {
         };
 
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
-            console.log("computer attack")
             controller.phase = "battle";
             let attackCord = defender.computerMove();
             attacker.gameboard.receiveAttack(attackCord);
@@ -97,11 +96,9 @@ document.addEventListener("click", (e) => {
     const newGameBtn = e.target.closest(".new-game-button");
 
     if (cords && player) {
-        console.log("attack sent")
         actions({cords: cords, player, type: "attack"})
     };
     if (startBtn) {
-        console.log("start button clicked");
         actions({type: "start-battle"})
         // Once phase is refactored finish here
     };
@@ -110,6 +107,7 @@ document.addEventListener("click", (e) => {
     };
     if (newGameBtn) {
         console.log("new game")
+        startGame()
     }
 });
 
@@ -234,6 +232,7 @@ function switchCurrentPlayer() {
 };
 
 function startGame() {
+    controller.phase = "setup"
     render({root: gameContainer, phase: controller.phase})
 }
 startGame();
