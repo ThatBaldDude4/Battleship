@@ -105,6 +105,7 @@ class Gameboard {
         return checked;
     }
 
+    // returns wether or not you hit a ship
     receiveAttack(cord) {
         let cell = this.board[cord[0]][cord[1]];
         if (!cell.isHit) {
@@ -112,9 +113,11 @@ class Gameboard {
             if (cell.ship) {
                 cell.ship.hit();
                 cell.ship.isSunk();
+                return {isShip: true, cord};
             }
         }
-    }
+        return {isShip: false};
+    };
 
     allSunk() {
         let result = this.ships.every((ship) => {
@@ -130,6 +133,7 @@ class Player {
         this.playerType = playerType.toLowerCase();
         this.possibleMoves = this.getAllMoves();
         this.playerId = playerId;
+        this.lastHitShipCord = null;
     };
 
     // get all possible coordinates from 2d array
@@ -145,10 +149,74 @@ class Player {
 
     // Grab all stored possibleMoves, select one and remove it from the list
     computerMove() {
-        let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
-        let randomMove = this.possibleMoves[randomIndex];
-        this.possibleMoves.splice(randomIndex, 1);
+        // if (this.playerId === "player1") {
+        //     let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
+        //     let randomMove = this.possibleMoves[randomIndex];
+        //     this.possibleMoves.splice(randomIndex, 1);
+        //     return randomMove;
+        // }
+        let randomMove;
+        let moves;
+        let index;
+        if (this.lastHitShipCord) {
+            moves = this.validateAdjacentMoves(this.getAdjacentCoords(this.lastHitShipCord));
+            index = Math.floor(Math.random() * ((moves.length - 1) + 1));
+        }
+        if (moves?.length > 0) {
+            randomMove = moves[index];
+            this.removeMoveFromAllMoves(randomMove);
+        }
+        else {
+            this.lastHitShipCord = null;
+            let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
+            randomMove = this.possibleMoves[randomIndex];
+            this.possibleMoves.splice(randomIndex, 1);
+        }
+        
         return randomMove;
+    };
+
+    getAdjacentCoords(cords) {
+        let max = this.gameboard.board.length - 1;
+        const [x, y] = cords;
+        let offsets = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+        let result = [];
+
+        offsets.forEach((pair) => {
+            let transX = x + pair[0];
+            let transY = y + pair[1];
+            if (transX <= max && transY <= max && transX >= 0 && transY >= 0) {
+                result.push([transX, transY]);
+            }
+        });
+
+        return result;
+    };
+
+    validateAdjacentMoves(moves) {
+        let validResults = [];
+
+        moves.forEach(([x, y]) => {
+            this.possibleMoves.forEach(([pairX, pairY]) => {
+                if (pairX === x && pairY === y) {
+                    validResults.push([x, y])
+                }
+            })
+        });
+        return validResults;
+    }
+
+    removeMoveFromAllMoves(cords) {
+        let [x, y] = cords;
+
+        let index = this.possibleMoves.findIndex((pair) => {
+            let [pairX, pairY] = pair;
+            return (pairX === x && pairY === y);
+        });
+
+        if (index >= 0) {
+            this.possibleMoves.splice(index, 1);
+        }
     }
 };
 

@@ -56,7 +56,8 @@ function actions(payload) {
         // currentPlayer is defending and the clicked cell hasn't been clicked before
         if (defender !== controller.currentPlayer && !cell?.isHit) {
             controller.phase = "battle";
-            defender.gameboard.receiveAttack(payload.cords);
+            let attackResult = defender.gameboard.receiveAttack(payload.cords);
+            handleAttackResult(attacker, attackResult);
             switchCurrentPlayer()
             if (defender.gameboard.allSunk()) {
                 controller.phase = "game-over";
@@ -69,7 +70,8 @@ function actions(payload) {
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
             controller.phase = "battle";
             let attackCord = defender.computerMove();
-            attacker.gameboard.receiveAttack(attackCord);
+            let attackResult = attacker.gameboard.receiveAttack(attackCord);
+            handleAttackResult(defender, attackResult);
             switchCurrentPlayer()
             if (attacker.gameboard.allSunk()) {
                 controller.phase = "game-over";
@@ -200,12 +202,21 @@ function resetRound() {
     });
 };
 
+function handleAttackResult(attacker, result) {
+    if (result.isShip) {
+        attacker.lastHitShipCord = result.cord;
+    }else {
+        attacker.lastHitShipCord = null;
+    }
+}
+
 function handleComputerTurns() {
     if (controller.currentPlayer.playerType !== "computer") {return}
     const attacker = controller.currentPlayer;
     const defender = controller.players[0] === attacker ? controller.players[1] : controller.players[0];
     let attack = attacker.computerMove();
-    defender.gameboard.receiveAttack(attack);
+    let attackResult = defender.gameboard.receiveAttack(attack);
+    handleAttackResult(attacker, attackResult);
     if (defender.gameboard.allSunk()) {
         controller.phase = "game-over";
         controller.winner = attacker;
@@ -216,7 +227,7 @@ function handleComputerTurns() {
     render({phase: controller.phase, root: gameContainer, players: controller.players});
 
     if (controller.phase === "battle") {
-        setTimeout(handleComputerTurns, 10);
+        setTimeout(handleComputerTurns, 1);
     }
 };
 
@@ -237,6 +248,7 @@ function startGame() {
 }
 startGame();
 
+console.log(controller.players[0].getAdjacentCoords([0, 2]));
 //After player type selection switch to ship placement.
 //After ship placement confirmed carry over the board data
 //into the players boards
@@ -255,5 +267,4 @@ startGame();
 
 // TODO: Refactor ship direction into state/ui/render instead of mutating DOM dataset directly
 // TODO: Refactor attack action to flow better and to acount for computer v computer
-// TODO: After start game check if currentPlayer is computer if so start attack
 // TODO: Refactor attack actions to split resposibilty and to not handle so much directly
