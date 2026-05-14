@@ -35,7 +35,7 @@ function actions(payload) {
         const shipOwner = getPlayersFromId(controller.players, payload.shipOwner);
         const player = getPlayersFromId(controller.players, payload.player);
         const ship = player.gameboard.ships[payload.index];
-        const direction = payload.shipDirection;
+        const direction = controller.placementDirection;
         if (shipOwner !== player) {return};
         player.gameboard.placeShip(ship, payload.cord, direction);
     };

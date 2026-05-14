@@ -30,17 +30,6 @@ function setupEvents(actions) {
         }
     });
 
-    // double click ship to switch direction attribute
-    document.addEventListener("dblclick", (e) => {
-        const ship = e.target.closest(".ship");
-        if (ship) {
-            let direction = ship.dataset.direction;
-            if (!direction) {ship.setAttribute("data-direction", "vertical")};
-            direction = direction === "horizontal" ? "vertical" : "horizontal";
-            ship.setAttribute("data-direction", direction)
-        };
-    })
-
     document.addEventListener("submit", (e) => {
         e.preventDefault();
         const player1Value = document.getElementById("player1-selection").value;
@@ -62,7 +51,6 @@ function setupEvents(actions) {
         const shipsPlayer = shipContainer?.dataset.player;
         const ship = e.target.closest(".ship");
         e.dataTransfer.setData("ship-owner", shipsPlayer);
-        e.dataTransfer.setData("direction", ship?.dataset.direction);
     });
 
     document.addEventListener("dragover", (e) => {
@@ -77,8 +65,7 @@ function setupEvents(actions) {
         const player = e.target.closest(".board")?.dataset.player;
         const index = e.dataTransfer.getData("text/plain");
         const shipOwner = e.dataTransfer.getData("ship-owner");
-        const shipDirection = e.dataTransfer.getData("direction");
-        actions({index, player, type: "ship-placement", cord, shipOwner, shipDirection}) 
+        actions({index, player, type: "ship-placement", cord, shipOwner}) 
     });
 };
 

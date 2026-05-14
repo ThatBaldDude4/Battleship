@@ -13,7 +13,7 @@ function render(payload) {
     if (payload.phase === "ship-placement") {
         payload.root.innerHTML = createPlayerContainers(payload.direction);
         renderPlayersBoards(payload.players, payload.root);
-        renderShipPlacement(payload.players);
+        renderShipPlacement(payload.players, payload.direction);
     };
     if (payload.phase === "game-over") {
         renderWinner(payload.root, payload.winner);
@@ -93,7 +93,7 @@ function renderHome(root) {
     `
 };
 
-function renderShipPlacement(players) {
+function renderShipPlacement(players, direction) {
     let player1ShipsContainer = document.getElementById("player1-ships");
     let player2ShipsContainer = document.getElementById("player2-ships");
 
@@ -104,7 +104,7 @@ function renderShipPlacement(players) {
             shipStr.className = `ship`;
             shipStr.setAttribute("draggable", "true");
             shipStr.setAttribute("data-index", index);
-            shipStr.setAttribute("data-direction", "vertical");
+            shipStr.setAttribute("data-direction", `${direction}`);
             for (let i = 0; i < ship.length; i++) {
                 let shipCell = document.createElement("div");
                 shipCell.className = `ship-cell`;
@@ -121,7 +121,7 @@ function renderShipPlacement(players) {
             shipStr.className = `ship`;
             shipStr.setAttribute("draggable", "true");
             shipStr.setAttribute("data-index", index);
-            shipStr.setAttribute("data-direction", "vertical");
+            shipStr.setAttribute("data-direction", `${direction}`);
             for (let i = 0; i < ship.length; i++) {
                 let shipCell = document.createElement("div");
                 shipCell.className = `ship-cell`;
