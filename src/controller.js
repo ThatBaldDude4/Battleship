@@ -37,7 +37,7 @@ function actions(payload) {
 
     if (payload.type === "start-game") {
         if (payload.playersValues) {
-            startNewGame(payload.playersValues)
+            startNewGame(payload.playersValues);
         };
     };
 
@@ -48,34 +48,31 @@ function actions(payload) {
             player2Value: controller.players[1].playerType,
         });
 
-        console.log(controller.players[0].playerType)
     }
 
     if (payload.type === "attack" && controller.phase === "battle") {
-        const defender = getPlayersFromId(controller.players, payload.player)
+        const defender = getPlayersFromId(controller.players, payload.player);
         const attacker = controller.currentPlayer;
         let cell = defender.gameboard.board[payload.cords[0]][payload.cords[1]];
 
         // currentPlayer is defending and the clicked cell hasn't been clicked before
         if (defender !== controller.currentPlayer && !cell?.isHit) {
-            controller.phase = "battle";
             let attackResult = defender.gameboard.receiveAttack(payload.cords);
             handleAttackResult(attacker, attackResult);
-            switchCurrentPlayer()
+            switchCurrentPlayer();
             if (defender.gameboard.allSunk()) {
-                handleWonGame()
+                handleWonGame();
                 return
-            }
+            };
         };
 
         if (defender?.playerType === "computer" && defender === controller.currentPlayer) {
-            controller.phase = "battle";
             let attackCord = defender.computerMove();
             let attackResult = attacker.gameboard.receiveAttack(attackCord);
             handleAttackResult(defender, attackResult);
-            switchCurrentPlayer()
+            switchCurrentPlayer();
             if (attacker.gameboard.allSunk()) {
-                handleWonGame()
+                handleWonGame();
                 return;
             }
         };
@@ -103,15 +100,15 @@ function startNewGame(playersValues) {
     if (player2.playerType === "computer") {
         player2.gameboard.computerPlaceAllShips();
     };
-}
+};
 
 function handleAttackResult(attacker, result) {
     if (result.isShip) {
         attacker.lastHitShipCord = result.cord;
     }else {
         attacker.lastHitShipCord = null;
-    }
-}
+    };
+};
 
 function handleComputerTurns() {
     if (controller.currentPlayer.playerType !== "computer") {return}
@@ -120,25 +117,27 @@ function handleComputerTurns() {
     let attack = attacker.computerMove();
     let attackResult = defender.gameboard.receiveAttack(attack);
     handleAttackResult(attacker, attackResult);
+
     if (defender.gameboard.allSunk()) {
         controller.phase = "game-over";
         controller.winner = attacker;
         render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
         return;
-    }
+    };
+
     switchCurrentPlayer()
     render({phase: controller.phase, root: gameContainer, players: controller.players});
 
     if (controller.phase === "battle") {
-        setTimeout(handleComputerTurns, 1);
-    }
+        setTimeout(handleComputerTurns, 100);
+    };
 };
 
 function handleWonGame() {
     controller.phase = "game-over";
     controller.winner = attacker;
     render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
-}
+};
 
 function getPlayersFromId(players, id) {
     return players.find(player => player.playerId === id);
@@ -154,26 +153,9 @@ function switchCurrentPlayer() {
 function startGame() {
     controller.phase = "setup"
     render({root: gameContainer, phase: controller.phase})
-}
+};
+
+// intialize game
 startGame();
-setupEvents(actions); //import event listeners and pass in callback function for listeners
-
-//After player type selection switch to ship placement.
-//After ship placement confirmed carry over the board data
-//into the players boards
-//Render boards, then render ships below them
-
-// Drag and drop listeners set up
-// Placing ships is set up
-
-// Need to have a rotate ship button
-// Need to not allow attacks during ship placments
-// Need to have random ship placements for computers
-// Need a start game button after all ships placed
-
-// Double click unplaced ship to change direction
-// Need to rerender each ship
-
-// TODO: Refactor ship direction into state/ui/render instead of mutating DOM dataset directly
-// TODO: Refactor attack action to flow better and to acount for computer v computer
-// TODO: Refactor attack actions to split resposibilty and to not handle so much directly
+// pass actions dispatcher into events
+setupEvents(actions);
