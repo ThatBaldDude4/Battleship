@@ -14,6 +14,10 @@ const controller = {
 function actions(payload) {
     if (!payload){return};
 
+    if (payload.type === "new-game") {
+        startGame();
+    }
+
     if (payload.type === "start-battle") {
         // check to make sure every player has all ships placed
         if (controller.players.every(player => player.gameboard.allPlaced())) {
@@ -24,9 +28,7 @@ function actions(payload) {
 
     if (payload.type === "ship-placement") {
         const shipOwner = getPlayersFromId(controller.players, payload.shipOwner);
-        console.log(shipOwner, "ship owner")
         const player = getPlayersFromId(controller.players, payload.player);
-        console.log(player)
         const ship = player.gameboard.ships[payload.index];
         const direction = payload.shipDirection;
         if (shipOwner !== player) {return};
@@ -40,7 +42,7 @@ function actions(payload) {
     };
 
     if (payload.type === "reset-game") {
-        console.log(controller.players)
+        if (controller.phase === "battle") {return}
         startNewGame({
             player1Value: controller.players[0].playerType,
             player2Value: controller.players[1].playerType,
@@ -92,7 +94,6 @@ function startNewGame(playersValues) {
 
     controller.players[0] = new Player(playersValues.player1Value, "player1");
     controller.players[1] = new Player(playersValues.player2Value, "player2");
-    console.log(playersValues.player1Value)
     controller.phase = "ship-placement";
     controller.currentPlayer = controller.players[0];
     controller.winner = null;
@@ -104,25 +105,9 @@ function startNewGame(playersValues) {
         player1.gameboard.computerPlaceAllShips();
     };
     if (player2.playerType === "computer") {
-        console.log("im a computer 2")
         player2.gameboard.computerPlaceAllShips();
     };
-    console.log(controller)
 }
-
-//start-game in actions intializes everything, only thing you
-//need to carry forward is the playerType
-function resetRound() {
-    const player1Type = controller.players.player1.playerType;
-    const player2Type = controller.players.player1.playerType;
-    actions({
-        playersValues: {
-            player1Value: player1Type,
-            player2Value: player2Type,
-        },
-        type: "start-game",
-    });
-};
 
 function handleAttackResult(attacker, result) {
     if (result.isShip) {
@@ -171,7 +156,6 @@ function startGame() {
 startGame();
 setupEvents(actions); //import event listeners and pass in callback function for listeners
 
-console.log(controller.players[0].getAdjacentCoords([0, 2]));
 //After player type selection switch to ship placement.
 //After ship placement confirmed carry over the board data
 //into the players boards
