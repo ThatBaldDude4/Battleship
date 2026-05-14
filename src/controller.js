@@ -63,9 +63,7 @@ function actions(payload) {
             handleAttackResult(attacker, attackResult);
             switchCurrentPlayer()
             if (defender.gameboard.allSunk()) {
-                controller.phase = "game-over";
-                controller.winner = attacker;
-                render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
+                handleWonGame()
                 return
             }
         };
@@ -77,16 +75,14 @@ function actions(payload) {
             handleAttackResult(defender, attackResult);
             switchCurrentPlayer()
             if (attacker.gameboard.allSunk()) {
-                controller.phase = "game-over";
-                controller.winner = defender;
-                render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
+                handleWonGame()
                 return;
             }
         };
 
     };
 
-    render({players: controller.players, phase: controller.phase, root: gameContainer});
+    render({players: controller.players, phase: controller.phase, root: gameContainer, winner: controller.winner});
 };
 
 function startNewGame(playersValues) {
@@ -137,6 +133,12 @@ function handleComputerTurns() {
         setTimeout(handleComputerTurns, 1);
     }
 };
+
+function handleWonGame() {
+    controller.phase = "game-over";
+    controller.winner = attacker;
+    render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
+}
 
 function getPlayersFromId(players, id) {
     return players.find(player => player.playerId === id);
