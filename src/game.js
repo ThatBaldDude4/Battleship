@@ -146,15 +146,9 @@ class Player {
         })
         return possibleMoves;
     };
-
     // Grab all stored possibleMoves, select one and remove it from the list
+    
     computerMove() {
-        // if (this.playerId === "player1") {
-        //     let randomIndex = Math.floor(Math.random() * ((this.possibleMoves.length - 1) - 0 + 1)) + 0;
-        //     let randomMove = this.possibleMoves[randomIndex];
-        //     this.possibleMoves.splice(randomIndex, 1);
-        //     return randomMove;
-        // }
         let randomMove;
         let moves;
         let index;

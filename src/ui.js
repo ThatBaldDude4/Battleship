@@ -33,6 +33,7 @@ function createPlayerContainers() {
             <div id="player2-ships" class="ship-container" data-player="player2"></div>
         </div>
         <button id="start-game-button">START</button>
+        <button id="reset-ship-placement">RESET</button>
     `;
 };
 

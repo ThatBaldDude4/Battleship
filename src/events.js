@@ -9,6 +9,7 @@ function setupEvents(actions) {
 
         const resetBtn = e.target.closest(".reset-button");
         const newGameBtn = e.target.closest(".new-game-button");
+        const resetBoardBtn = e.target.closest("#reset-ship-placement");
 
         if (cords && player) {
             actions({cords: cords, player, type: "attack"})
@@ -17,12 +18,11 @@ function setupEvents(actions) {
             actions({type: "start-battle"})
             // Once phase is refactored finish here
         };
-        if (resetBtn) {
+        if (resetBtn || resetBoardBtn) {
             actions({type: "reset-game"})
         };
         if (newGameBtn) {
-            console.log("new game")
-            startGame()
+            actions({type: "new-game"})
         }
     });
 
