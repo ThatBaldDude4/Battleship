@@ -10,6 +10,7 @@ function setupEvents(actions) {
         const resetBtn = e.target.closest(".reset-button");
         const newGameBtn = e.target.closest(".new-game-button");
         const resetBoardBtn = e.target.closest("#reset-ship-placement");
+        const directionBtn = e.target.closest("#direction-button");
 
         if (cords && player) {
             actions({cords: cords, player, type: "attack"})
@@ -23,6 +24,9 @@ function setupEvents(actions) {
         };
         if (newGameBtn) {
             actions({type: "new-game"})
+        };
+        if (directionBtn) {
+            actions({type: "flip-placement-direction"})
         }
     });
 
@@ -68,7 +72,6 @@ function setupEvents(actions) {
     })
 
     document.addEventListener("drop", (e) => {
-        console.log("drop");
         e.preventDefault();
         const cord = e.target.closest(".grid-cell")?.dataset.cord?.split(",").map(Number);
         const player = e.target.closest(".board")?.dataset.player;

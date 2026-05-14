@@ -11,7 +11,7 @@ function render(payload) {
         renderHome(payload.root);
     };
     if (payload.phase === "ship-placement") {
-        payload.root.innerHTML = createPlayerContainers();
+        payload.root.innerHTML = createPlayerContainers(payload.direction);
         renderPlayersBoards(payload.players, payload.root);
         renderShipPlacement(payload.players);
     };
@@ -20,7 +20,7 @@ function render(payload) {
     }
 };
 
-function createPlayerContainers() {
+function createPlayerContainers(direction) {
     return `
         <div id="player1-container">
             <h2>Player 1</h2>
@@ -32,6 +32,7 @@ function createPlayerContainers() {
             <div id="player2-board" class="board" data-player="player2"></div>
             <div id="player2-ships" class="ship-container" data-player="player2"></div>
         </div>
+        <button id="direction-button">${direction.toUpperCase()}</button>
         <button id="start-game-button">START</button>
         <button id="reset-ship-placement">RESET</button>
     `;

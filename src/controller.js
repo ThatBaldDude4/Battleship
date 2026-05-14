@@ -8,7 +8,8 @@ const controller = {
     currentPlayer: null,
     winner: null,
     phase: "setup",
-    players: [new Player("Human", "player1"), new Player("Computer", "player2")]
+    players: [new Player("Human", "player1"), new Player("Computer", "player2")],
+    placementDirection: "horizontal",
 };
 
 function actions(payload) {
@@ -16,6 +17,10 @@ function actions(payload) {
 
     if (payload.type === "new-game") {
         startGame();
+    };
+
+    if (payload.type === "flip-placement-direction") {
+        controller.placementDirection = controller.placementDirection === "horizontal" ? "vertical" : "horizontal";
     }
 
     if (payload.type === "start-battle") {
@@ -79,7 +84,7 @@ function actions(payload) {
 
     };
 
-    render({players: controller.players, phase: controller.phase, root: gameContainer, winner: controller.winner});
+    render({players: controller.players, phase: controller.phase, root: gameContainer, winner: controller.winner, direction: controller.placementDirection});
 };
 
 function startNewGame(playersValues) {
