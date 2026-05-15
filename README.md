@@ -1,6 +1,6 @@
 # Battleship Project
 
-[Battleship Demo]()
+[Battleship Demo](https://thatbalddude4.github.io/Battleship/)
 
 ## Features
 - Human v Human, Human V Computer, or Computer v Computer
