@@ -1,7 +1,5 @@
 function setupEvents(actions) {
-    // may want to refactor extra vars
     document.addEventListener("click", (e) => {
-        // convert cords string to numbers
         const cords = e.target.closest(".grid-cell")?.dataset.cord.split(",").map(Number);
         
         const player = e.target.closest(".board")?.dataset.player;
@@ -17,7 +15,6 @@ function setupEvents(actions) {
         };
         if (startBtn) {
             actions({type: "start-battle"})
-            // Once phase is refactored finish here
         };
         if (resetBtn || resetBoardBtn) {
             actions({type: "reset-game"})

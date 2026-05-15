@@ -27,8 +27,9 @@ function actions(payload) {
         // check to make sure every player has all ships placed
         if (controller.players.every(player => player.gameboard.allPlaced())) {
             controller.phase = "battle";
+            handleComputerTurns();
         }
-        handleComputerTurns();
+        
     }
 
     if (payload.type === "ship-placement") {
@@ -66,7 +67,7 @@ function actions(payload) {
             handleAttackResult(attacker, attackResult);
             switchCurrentPlayer();
             if (defender.gameboard.allSunk()) {
-                handleWonGame();
+                handleWonGame(attacker);
                 return
             };
         };
@@ -77,7 +78,7 @@ function actions(payload) {
             handleAttackResult(defender, attackResult);
             switchCurrentPlayer();
             if (attacker.gameboard.allSunk()) {
-                handleWonGame();
+                handleWonGame(defender);
                 return;
             }
         };
@@ -138,9 +139,9 @@ function handleComputerTurns() {
     };
 };
 
-function handleWonGame() {
+function handleWonGame(winner) {
     controller.phase = "game-over";
-    controller.winner = attacker;
+    controller.winner = winner;
     render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
 };
 
