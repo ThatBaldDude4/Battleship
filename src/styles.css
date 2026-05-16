@@ -1,29 +1,51 @@
 * {
-    color: orange;
-    background-color: black;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    color: orange;
+    background-color: black;
+}
+
+body {
+    width: min(100%, 1200px);
 }
 
 #game-container {
-    gap: 100px;
     display: flex;
+    flex-direction: column;
 }
 
-.grid-cell {
-    border: 2px solid orange;
-    min-width: 20px;
-    min-height: 20px;
+#players-container {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: space-around;
+}
+
+#player1-container,
+#player2-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .board {
+    max-width: 200px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr); 
-    border: 2px solid white;
-    max-width: 400px;
     transform: rotate(0.75turn);
+}
+
+.grid-cell {
+    width: clamp(10px, 20px, 40px);
+    height: clamp(10px, 20px, 40px);
+    border: 1px solid orange;
+}
+
+.grid-cell:hover {
+    border: 1px solid white;
 }
 
 .occupied {
@@ -40,28 +62,68 @@
 
 .ship-container {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    max-width: 200px;
     gap: 10px;
-    min-width: 20px;
-}
-
-.ship-cell {
-    border: 2px solid red;
-    min-width: 20px;
-    min-height: 20px;
-    max-height: 20px;
+    max-width: 200px;
+    border-radius: 20px;
 }
 
 .ship {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+}
+
+.ship:hover {
+    border: 2px solid white;
 }
 
 .ship[data-direction="horizontal"] {
-  flex-direction: row;
+    flex-direction: row;
 }
 
 .ship[data-direction="vertical"] {
-  flex-direction: column;
+    flex-direction: column;
 }
+
+.ship-cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid white;
+}
+
+#home-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+button,
+select {
+    min-width: 40px;
+    max-width: 120px;
+}
+
+#game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#direction-button:hover,
+#start-game-button:hover,
+#reset-ship-placement:hover,
+.reset-button:hover,
+.new-game-button:hover {
+    border: 1px solid white;
+}
+
+@media (max-width: 500px) {
+    #game-container {
+        flex-direction: column;
+    }
+
+    #players-container {
+        flex-direction: column;
+    }
+}
+
