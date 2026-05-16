@@ -1,27 +1,32 @@
 // payload = {players, root, phase}
 function render(payload) {
-    if (payload.phase === "start-game") {
-        payload.root.innerHTML = createPlayerContainers();
-        renderPlayersBoards(payload.players, payload.root);
-    };
     if (payload.phase === "battle") {
         renderPlayersBoards(payload.players, payload.root);
+        renderStatus(payload.root, "Battle");
     };
     if (payload.phase === "setup") {
         renderHome(payload.root);
     };
     if (payload.phase === "ship-placement") {
-        payload.root.innerHTML = createPlayerContainers(payload.direction);
+        payload.root.innerHTML = createPlayerContainers(payload.direction, "Place Ship");
         renderPlayersBoards(payload.players, payload.root);
         renderShipPlacement(payload.players, payload.direction);
+        renderStatus(payload.root, "Place Ships");
     };
     if (payload.phase === "game-over") {
         renderWinner(payload.root, payload.winner);
     }
 };
 
-function createPlayerContainers(direction) {
+function createPlayerContainers(direction, status = "") {
     return `
+    <div id="game-controls">
+        <button id="direction-button">${direction.toUpperCase()}</button>
+        <button id="start-game-button">START</button>
+        <button id="reset-ship-placement">RESET</button>
+        <div id="status-container"></div>
+    </div>
+    <div id="players-container">
         <div id="player1-container">
             <h2>Player 1</h2>
             <div id="player1-board" class="board" data-player="player1"></div>
@@ -32,11 +37,16 @@ function createPlayerContainers(direction) {
             <div id="player2-board" class="board" data-player="player2"></div>
             <div id="player2-ships" class="ship-container" data-player="player2"></div>
         </div>
-        <button id="direction-button">${direction.toUpperCase()}</button>
-        <button id="start-game-button">START</button>
-        <button id="reset-ship-placement">RESET</button>
+    </div>
     `;
 };
+
+function renderStatus(root, status) {
+    let container = root.querySelector("#status-container");
+    if (!container) {return};
+
+    container.textContent = `STATUS: ${status}`;
+}
 
 function createBoard(board) {
     let html = "";
