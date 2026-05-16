@@ -21,15 +21,13 @@ function render(payload) {
         addClassToCells(payload.cords, payload.playerId);
     };
     if (payload.phase === "remove-ship-preview") {
-
+        removeClassFromCells(payload.cords, payload.playerId)
     }
 };
 
 function addClassToCells(cords, playerId) {
     const root = document.querySelector(`#${playerId}-board`);
-    
     cords.forEach(([x, y]) => {
-        console.log(x, y)
         const element = root.querySelector(`[data-cord="${x},${y}"]`);
         element.classList.add("drop-preview");
     });
@@ -38,7 +36,6 @@ function addClassToCells(cords, playerId) {
 function removeClassFromCells(cords, playerId) {
     const root = document.querySelector(`#${playerId}-board`);
     cords.forEach(([x, y]) => {
-        console.log(cords)
         const element = root.querySelector(`[data-cord="${x},${y}"]`);
         element.classList.remove("drop-preview");
     });

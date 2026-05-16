@@ -63,7 +63,6 @@ function setupEvents(actions) {
 
         if (cords) {
             e.preventDefault();
-            cell.classList.add("drop-preview")
             actions({type: "add-ship-preview", cords, boardOwner, shipIndex, shipOwner});
         };
     });
@@ -78,7 +77,6 @@ function setupEvents(actions) {
 
         if (cords) {
             e.preventDefault();
-            cell.classList.add("drop-preview")
             actions({type: "remove-ship-preview", cords, boardOwner, shipIndex, shipOwner});
         };
     })

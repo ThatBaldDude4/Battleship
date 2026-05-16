@@ -43,10 +43,6 @@ function actions(payload) {
         return
     }
 
-    if (payload.type === "remove-ship-preview") {
-
-    }
-
     if (payload.type === "flip-placement-direction") {
         controller.placementDirection = controller.placementDirection === "horizontal" ? "vertical" : "horizontal";
     }
