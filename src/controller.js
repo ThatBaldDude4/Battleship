@@ -19,6 +19,34 @@ function actions(payload) {
         startGame();
     };
 
+    if (payload.type === "add-ship-preview") {
+        const shipOwner = getPlayersFromId(controller.players, payload.shipOwner);
+        const boardOwner = getPlayersFromId(controller.players, payload.boardOwner);
+        if (shipOwner === boardOwner) {
+            let shipLength = boardOwner.gameboard.ships[payload.shipIndex].length;
+            const moves = boardOwner.gameboard.getCordSet(shipLength, payload.cords, controller.placementDirection);
+            if (!boardOwner.gameboard.validateCord(moves)) {return}
+            render({phase: "add-ship-preview", cords: moves, playerId: boardOwner.playerId})
+        }
+        return
+    };
+
+    if (payload.type === "remove-ship-preview") {
+        const shipOwner = getPlayersFromId(controller.players, payload.shipOwner);
+        const boardOwner = getPlayersFromId(controller.players, payload.boardOwner);
+        if (shipOwner === boardOwner) {
+            let shipLength = boardOwner.gameboard.ships[payload.shipIndex].length;
+            const moves = boardOwner.gameboard.getCordSet(shipLength, payload.cords, controller.placementDirection);
+            if (!boardOwner.gameboard.validateCord(moves)) {return}
+            render({phase: "remove-ship-preview", cords: moves, playerId: boardOwner.playerId})
+        }
+        return
+    }
+
+    if (payload.type === "remove-ship-preview") {
+
+    }
+
     if (payload.type === "flip-placement-direction") {
         controller.placementDirection = controller.placementDirection === "horizontal" ? "vertical" : "horizontal";
     }

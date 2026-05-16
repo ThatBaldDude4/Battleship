@@ -56,6 +56,10 @@ body {
     background-color: blue;
 }
 
+.drop-preview {
+    background-color: lightgray;
+}
+
 .occupied.hit {
     background-color: red;
 }

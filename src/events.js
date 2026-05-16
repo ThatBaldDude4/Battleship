@@ -1,4 +1,6 @@
 function setupEvents(actions) {
+    let draggedShip = null;
+
     document.addEventListener("click", (e) => {
         const cords = e.target.closest(".grid-cell")?.dataset.cord.split(",").map(Number);
         
@@ -47,13 +49,38 @@ function setupEvents(actions) {
         const shipContainer = e.target.closest(".ship-container");
         const shipsPlayer = shipContainer?.dataset.player;
         const ship = e.target.closest(".ship");
+        draggedShip = ship;
         e.dataTransfer.setData("ship-owner", shipsPlayer);
     });
 
     document.addEventListener("dragover", (e) => {
-        if (e.target.closest(".grid-cell")) {
+        const cell = e.target.closest(".grid-cell");
+        const cords = cell?.dataset.cord.split(",").map(Number);
+        const boardOwner = e.target.closest(".board")?.dataset.player; // player1, player2
+        const shipIndex = draggedShip?.dataset.index;
+        const shipOwner = draggedShip.closest(".ship-container")?.dataset.player;
+        
+
+        if (cords) {
             e.preventDefault();
-        }
+            cell.classList.add("drop-preview")
+            actions({type: "add-ship-preview", cords, boardOwner, shipIndex, shipOwner});
+        };
+    });
+
+    document.addEventListener("dragleave", (e) => {
+        const cell = e.target.closest(".grid-cell");
+        const cords = cell?.dataset.cord.split(",").map(Number);
+        const boardOwner = e.target.closest(".board")?.dataset.player; // player1, player2
+        const shipIndex = draggedShip?.dataset.index;
+        const shipOwner = draggedShip.closest(".ship-container")?.dataset.player;
+        
+
+        if (cords) {
+            e.preventDefault();
+            cell.classList.add("drop-preview")
+            actions({type: "remove-ship-preview", cords, boardOwner, shipIndex, shipOwner});
+        };
     })
 
     document.addEventListener("drop", (e) => {

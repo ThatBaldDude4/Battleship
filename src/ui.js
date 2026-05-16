@@ -15,8 +15,34 @@ function render(payload) {
     };
     if (payload.phase === "game-over") {
         renderWinner(payload.root, payload.winner);
+    };
+    if (payload.phase === "add-ship-preview") {
+        
+        addClassToCells(payload.cords, payload.playerId);
+    };
+    if (payload.phase === "remove-ship-preview") {
+
     }
 };
+
+function addClassToCells(cords, playerId) {
+    const root = document.querySelector(`#${playerId}-board`);
+    
+    cords.forEach(([x, y]) => {
+        console.log(x, y)
+        const element = root.querySelector(`[data-cord="${x},${y}"]`);
+        element.classList.add("drop-preview");
+    });
+};
+
+function removeClassFromCells(cords, playerId) {
+    const root = document.querySelector(`#${playerId}-board`);
+    cords.forEach(([x, y]) => {
+        console.log(cords)
+        const element = root.querySelector(`[data-cord="${x},${y}"]`);
+        element.classList.remove("drop-preview");
+    });
+}
 
 function createPlayerContainers(direction, status = "") {
     return `
