@@ -72,7 +72,11 @@ function actions(payload) {
     };
 
     if (payload.type === "reset-game") {
-        if (controller.phase === "battle") {return}
+        let shouldReset = true;
+        if (controller.phase === "battle") {
+            shouldReset = confirm("Are you sure you want to reset the game?");
+        };
+        if (!shouldReset) {return};
         startNewGame({
             player1Value: controller.players[0].playerType,
             player2Value: controller.players[1].playerType,
