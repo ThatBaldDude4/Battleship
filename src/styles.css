@@ -36,6 +36,7 @@ body {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     transform: rotate(0.75turn);
+    border: 1px solid orange;
 }
 
 .grid-cell {
@@ -58,12 +59,17 @@ body {
     background-color: blue;
 }
 
+.grid-cell.occupied.hit {
+    background-color: red;
+    animation: ship-hit-impact 400ms ease-out;
+}
+
 .drop-preview {
     background-color: rgba(148, 148, 148, 0.826);
 }
 
 .occupied.hit {
-    transition: background-color 1s ease-in 0.25s;
+    
     background-color: red;
 }
 
@@ -137,3 +143,28 @@ select {
     }
 }
 
+@keyframes ship-hit-impact {
+    0% {
+        transform: scale(1);
+        background-color: white;
+    }
+    25% {
+        transform: scale(0.75);
+        background-color: red;
+    }
+    45% {
+        transform: scale(0.45);
+    }
+    55% {
+        transform: scale(0.25);
+    }
+    65% {
+        transform: scale(0.65);
+    }
+    80% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
