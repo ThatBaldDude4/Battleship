@@ -42,6 +42,8 @@ body {
     width: clamp(10px, 20px, 40px);
     height: clamp(10px, 20px, 40px);
     border: 1px solid orange;
+    background-color: transparent;
+    transition: background-color 250ms ease;
 }
 
 .grid-cell:hover {
@@ -52,7 +54,7 @@ body {
     background-color: white;
 }
 
-.hit {
+.grid-cell.hit {
     background-color: blue;
 }
 
@@ -61,6 +63,7 @@ body {
 }
 
 .occupied.hit {
+    transition: background-color 1s ease-in 0.25s;
     background-color: red;
 }
 

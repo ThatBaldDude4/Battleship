@@ -94,6 +94,8 @@ function actions(payload) {
             let attackResult = defender.gameboard.receiveAttack(payload.cords);
             handleAttackResult(attacker, attackResult);
             switchCurrentPlayer();
+            // UI is expecting a series of coords, normalize cords to be a 2d array
+            render({type: "update-board", cords: [payload.cords], playerId: attacker.playerId});
             if (defender.gameboard.allSunk()) {
                 handleWonGame(attacker);
                 return
@@ -105,12 +107,13 @@ function actions(payload) {
             let attackResult = attacker.gameboard.receiveAttack(attackCord);
             handleAttackResult(defender, attackResult);
             switchCurrentPlayer();
+            render({type: "update-board", cords: [payload.cords], playerId: defender.playerId});
             if (attacker.gameboard.allSunk()) {
                 handleWonGame(defender);
                 return;
             }
         };
-
+        return
     };
 
     render({players: controller.players, phase: controller.phase, root: gameContainer, winner: controller.winner, direction: controller.placementDirection});
@@ -193,3 +196,5 @@ function startGame() {
 startGame();
 // pass actions dispatcher into events
 setupEvents(actions);
+
+//computer attack doesn't seem random after changing attack to not render board every turn

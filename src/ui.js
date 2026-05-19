@@ -18,26 +18,30 @@ function render(payload) {
     };
     if (payload.phase === "add-ship-preview") {
         
-        addClassToCells(payload.cords, payload.playerId);
+        addClassToCells(payload.cords, payload.playerId, "drop-preview");
     };
     if (payload.phase === "remove-ship-preview") {
-        removeClassFromCells(payload.cords, payload.playerId)
+        removeClassFromCells(payload.cords, payload.playerId, "drop-preview")
+    };
+    if (payload.type === "update-board") {
+        console.log(payload.cords)
+        addClassToCells(payload.cords, payload.playerId, "hit")
     }
 };
 
-function addClassToCells(cords, playerId) {
+function addClassToCells(cords, playerId, className) {
     const root = document.querySelector(`#${playerId}-board`);
     cords.forEach(([x, y]) => {
         const element = root.querySelector(`[data-cord="${x},${y}"]`);
-        element.classList.add("drop-preview");
+        element.classList.add(className);
     });
 };
 
-function removeClassFromCells(cords, playerId) {
+function removeClassFromCells(cords, playerId, className) {
     const root = document.querySelector(`#${playerId}-board`);
     cords.forEach(([x, y]) => {
         const element = root.querySelector(`[data-cord="${x},${y}"]`);
-        element.classList.remove("drop-preview");
+        element.classList.remove(className);
     });
 }
 
