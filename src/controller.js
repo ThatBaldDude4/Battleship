@@ -95,7 +95,7 @@ function actions(payload) {
             handleAttackResult(attacker, attackResult);
             switchCurrentPlayer();
             // UI is expecting a series of coords, normalize cords to be a 2d array
-            render({type: "update-board", cords: [payload.cords], playerId: attacker.playerId});
+            render({type: "update-board", cords: [payload.cords], playerId: defender.playerId});
             if (defender.gameboard.allSunk()) {
                 handleWonGame(attacker);
                 return
@@ -107,7 +107,7 @@ function actions(payload) {
             let attackResult = attacker.gameboard.receiveAttack(attackCord);
             handleAttackResult(defender, attackResult);
             switchCurrentPlayer();
-            render({type: "update-board", cords: [payload.cords], playerId: defender.playerId});
+            render({type: "update-board", cords: [attackCord], playerId: attacker.playerId});
             if (attacker.gameboard.allSunk()) {
                 handleWonGame(defender);
                 return;
