@@ -24,7 +24,6 @@ function render(payload) {
         removeClassFromCells(payload.cords, payload.playerId, "drop-preview")
     };
     if (payload.type === "update-board") {
-        console.log(payload.cords)
         addClassToCells(payload.cords, payload.playerId, "hit")
     }
 };
