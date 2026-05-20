@@ -44,7 +44,7 @@ body {
     height: clamp(10px, 20px, 40px);
     border: 1px solid orange;
     background-color: transparent;
-    transition: background-color 250ms ease;
+    transition: background-color 500ms ease;
 }
 
 .grid-cell:hover {
@@ -154,17 +154,23 @@ select {
     }
     45% {
         transform: scale(0.45);
+        background-color: red;
     }
     55% {
-        transform: scale(0.25);
+        transform: scale(0.35);
+        background-color: red;
     }
     65% {
         transform: scale(0.65);
+        background-color: rgb(255, 157, 0);
+        border: 2px solid rgba(255, 204, 0, 0.8)
     }
     80% {
         transform: scale(0.8);
+        background-color: rgb(255, 94, 0);
     }
     100% {
         transform: scale(1);
+        background-color: red;
     }
 }

@@ -1,6 +1,6 @@
 // payload = {players, root, phase}
 function render(payload) {
-    if (payload.phase === "battle") {
+    if (payload.phase === "battle" && payload?.type !== "update-board") {
         renderPlayersBoards(payload.players, payload.root);
         renderStatus(payload.root, "Battle");
     };
