@@ -50,6 +50,7 @@ function actions(payload) {
     if (payload.type === "start-battle") {
         // check to make sure every player has all ships placed
         if (controller.players.every(player => player.gameboard.allPlaced())) {
+            console.log("everything placed")
             controller.phase = "battle";
             handleComputerTurns();
         }
@@ -158,12 +159,13 @@ function handleComputerTurns() {
     if (defender.gameboard.allSunk()) {
         controller.phase = "game-over";
         controller.winner = attacker;
-        render({phase: controller.phase, root: gameContainer, players: controller.players, winner: controller.winner});
+        handleWonGame(defender);
         return;
     };
 
     switchCurrentPlayer()
-    render({phase: controller.phase, root: gameContainer, players: controller.players});
+    console.log(controller.phase)
+    render({type: "update-board", cords: [attack], playerId: attacker.playerId});
 
     if (controller.phase === "battle") {
         setTimeout(handleComputerTurns, 100);
